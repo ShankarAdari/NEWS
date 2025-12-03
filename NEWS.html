@@ -1,9 +1,10 @@
-<!DOCTYPE html>
+<!DOCTYPE html><!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Universal Live News Feed</title>
+<!-- Load Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 ::-webkit-scrollbar {
@@ -16,16 +17,28 @@ border-radius: 4px;
 ::-webkit-scrollbar-track {
 background-color: #f3f4f6;
 }
+@keyframes live-pulse {
+0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+}
+.live-badge-pulse {
+animation: live-pulse 2s infinite;
+}
 </style>
 </head>
 <body class="bg-gray-100 min-h-screen font-sans">
+<!-- Main Application Container -->
 <div id="app-container" class="max-w-3xl mx-auto shadow-xl bg-white min-h-screen">
+<!-- Header -->
 <header class="p-6 border-b border-gray-200">
 <h1 class="text-3xl font-extrabold text-gray-900">Live Feed Dashboard</h1>
 <p class="text-sm text-gray-500 mt-1">Real-time headlines delivered right now.</p>
 </header>
+<!-- Dynamic Content Area -->
 <main id="content" class="p-6"></main>
 </div>
+<!-- Breaking News SnackBar Placeholder -->
 <div id="snackbar-container" class="fixed bottom-4 w-full flex justify-center z-50 pointer-events-none">
 <div id="snackbar" class="bg-red-600 text-white p-4 rounded-lg shadow-2xl transition-opacity duration-300 opacity-0 transform translate-y-4 max-w-sm pointer-events-auto">
 <div class="flex items-center">
@@ -56,7 +69,7 @@ summary: 'This is a brief summary describing the impact and initial public respo
 author: `Reporter ${Math.floor(Math.random() * 100)}`,
 source: randomSource,
 publishedAt: publishedAt,
-imageUrl: `https://placehold.co/400x200/4F46E5/ffffff?text=${randomSource.toUpperCase()}`,
+imageUrl: `https://placehold.co/400x200/4F46E5/ffffff?text=${randomSource.toUpperCase()}-${seed}`, // Added seed to image text
 isBreaking: isBreaking,
 };
 }
@@ -70,25 +83,19 @@ resolve(initialArticles);
 }
 function startLiveFeed() {
 setInterval(() => {
-const isBreaking = Math.random() < 0.3; 
+const isBreaking = Math.random() < 0.3; // 30% chance of breaking news
 const newArticle = createArticle(isBreaking);
-articles = [newArticle, ...articles]; 
-renderArticleList();
-if (isBreaking) {
-showBreakingNewsSnackbar(newArticle);
-}
-}, 15000); 
-}
+articles = [newArticle, ...articles]; // Add to the toprenderArticleList();
+if (isBreaking) {showBreakingNewsSnackbar(newArticle);}}, 15000); }
 function showBreakingNewsSnackbar(article) {
-if (article.id === lastBreakingId) return; 
+if (article.id === lastBreakingId) return; // Prevent double-snackbars
 lastBreakingId = article.id;
 const snackbar = document.getElementById('snackbar');
 const titleEl = document.getElementById('snackbar-title');
 titleEl.textContent = article.title;
 snackbar.classList.remove('opacity-0', 'translate-y-4');
 snackbar.classList.add('opacity-100', 'translate-y-0');
-setTimeout(() => {
-snackbar.classList.remove('opacity-100', 'translate-y-0');
+setTimeout(() => {snackbar.classList.remove('opacity-100', 'translate-y-0');
 snackbar.classList.add('opacity-0', 'translate-y-4');
 }, 5000);
 }
@@ -103,25 +110,27 @@ return `${minutes}m ago`;
 return `${hours}h ago`;
 } else {
 return `${date.getMonth() + 1}/${date.getDate()} • ${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
-}
-}
+}}
 function renderLoading() {
 document.getElementById('content').innerHTML = `
 <div class="flex flex-col items-center justify-center py-20">
 <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
 <p class="mt-4 text-lg text-indigo-600">Loading initial headlines...</p>
 </div>
-;
+`;
 }
 function renderArticleCard(article) {
+const cardClasses = article.isBreaking 
+? 'border-2 border-red-500 ring-4 ring-red-200 shadow-2xl' 
+: 'shadow-md'; 
 const breakingTag = article.isBreaking 
-? `<div class="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold py-1 px-3 rounded-full shadow-lg flex items-center">
+? `<div class="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold py-1 px-3 rounded-full shadow-lg flex items-center live-badge-pulse">
 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-LIVE
+LIVE PHOTO
 </div>`
 : '';
 return `
-<div class="bg-white rounded-xl shadow-md overflow-hidden mb-6 hover:shadow-xl transition duration-300 transform hover:scale-[1.01]">
+<div class="bg-white rounded-xl overflow-hidden mb-6 hover:shadow-xl transition duration-300 transform hover:scale-[1.01] ${cardClasses}">
 <div class="cursor-pointer" onclick="renderDetailPage('${article.id}')">
 <div class="relative">
 <img class="w-full h-48 object-cover" src="${article.imageUrl}" alt="${article.title}">
@@ -189,7 +198,7 @@ renderLoading();
 articles = await fetchInitialHeadlines();
 isLoading = false;
 renderArticleList();
-startLiveFeed(); 
+startLiveFeed(); // Start the live feed simulator
 });
 </script>
 </body>
