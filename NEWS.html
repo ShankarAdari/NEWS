@@ -1,212 +1,328 @@
-Run this program in note pad or any other application
-
-Make sure to save the file in HTML format
-
-
-<!DOCTYPE html><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Universal Live News Feed</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-::-webkit-scrollbar {
-width: 8px;
-}
-::-webkit-scrollbar-thumb {
-background-color: #9ca3af;
-border-radius: 4px;
-}
-::-webkit-scrollbar-track {
-background-color: #f3f4f6;
-}
-@keyframes live-pulse {
-0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
-70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
-100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
-}
-.live-badge-pulse {
-animation: live-pulse 2s infinite;
-}
-</style>
-</head>
-<body class="bg-gray-100 min-h-screen font-sans">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Live News Feed</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom scrollbar styling for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: #9ca3af;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background-color: #312E81; /* Dark track for theme */
+        }
+        
+        /* Added: Live Pulse Animation for high engagement */
+        @keyframes live-pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+        .live-badge-pulse {
+            animation: live-pulse 2s infinite;
+        }
 
-<div id="app-container" class="max-w-3xl mx-auto shadow-xl bg-white min-h-screen">
-<!-- Header -->
-<header class="p-6 border-b border-gray-200">
-<h1 class="text-3xl font-extrabold text-gray-900">Live Feed Dashboard</h1>
-<p class="text-sm text-gray-500 mt-1">Real-time headlines delivered right now.</p>
-</header>
-<!-- Dynamic Content Area -->
-<main id="content" class="p-6"></main>
-</div>
-<!-- Breaking News SnackBar Placeholder -->
-<div id="snackbar-container" class="fixed bottom-4 w-full flex justify-center z-50 pointer-events-none">
-<div id="snackbar" class="bg-red-600 text-white p-4 rounded-lg shadow-2xl transition-opacity duration-300 opacity-0 transform translate-y-4 max-w-sm pointer-events-auto">
-<div class="flex items-center">
-<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-<span class="font-bold">BREAKING: </span>
-<span id="snackbar-title" class="ml-1 truncate"></span>
-</div>
-</div>
-</div>
-<script>
-let articles = [];
-let isLoading = true;
-let lastBreakingId = null;
-function createArticle(isBreaking = false) {
-const sources = ['TechCrunch', 'CNN', 'BBC', 'The Verge', 'Bloomberg'];
-const topics = [
-'AI Revolution', 'Stock Market Surge', 'Global Climate Pact',
-'New Space Telescope Findings', 'E-Sports Championship Final', 'Major Software Bug Alert'
-];
-const randomSource = sources[Math.floor(Math.random() * sources.length)];
-const randomTopic = topics[Math.floor(Math.random() * topics.length)];
-const publishedAt = new Date();
-const seed = Math.floor(Math.random() * 10000);
-return {
-id: publishedAt.getTime().toString() + seed,
-title: `${randomTopic}: Market Reaction and Expert Analysis`,
-summary: 'This is a brief summary describing the impact and initial public response to the major event. Analysts expect volatility in the coming days.',
-author: `Reporter ${Math.floor(Math.random() * 100)}`,
-source: randomSource,
-publishedAt: publishedAt,
-imageUrl: `https://placehold.co/400x200/4F46E5/ffffff?text=${randomSource.toUpperCase()}-${seed}`, // Added seed to image text
-isBreaking: isBreaking,
-};
-}
-function fetchInitialHeadlines() {
-return new Promise(resolve => {
-setTimeout(() => {
-const initialArticles = Array.from({ length: 10 }, () => createArticle());
-resolve(initialArticles);
-}, 2000); 
-});
-}
-function startLiveFeed() {
-setInterval(() => {
-const isBreaking = Math.random() < 0.3; // 30% chance of breaking news
-const newArticle = createArticle(isBreaking);
-articles = [newArticle, ...articles]; // Add to the toprenderArticleList();
-if (isBreaking) {showBreakingNewsSnackbar(newArticle);}}, 15000); }
-function showBreakingNewsSnackbar(article) {
-if (article.id === lastBreakingId) return; // Prevent double-snackbars
-lastBreakingId = article.id;
-const snackbar = document.getElementById('snackbar');
-const titleEl = document.getElementById('snackbar-title');
-titleEl.textContent = article.title;
-snackbar.classList.remove('opacity-0', 'translate-y-4');
-snackbar.classList.add('opacity-100', 'translate-y-0');
-setTimeout(() => {snackbar.classList.remove('opacity-100', 'translate-y-0');
-snackbar.classList.add('opacity-0', 'translate-y-4');
-}, 5000);
-}
-function formatDate(date) {
-const now = new Date();
-const diff = now - date;
-const minutes = Math.floor(diff / (1000 * 60));
-const hours = Math.floor(diff / (1000 * 60 * 60));
-if (minutes < 60) {
-return `${minutes}m ago`;
-} else if (hours < 24) {
-return `${hours}h ago`;
-} else {
-return `${date.getMonth() + 1}/${date.getDate()} • ${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
-}}
-function renderLoading() {
-document.getElementById('content').innerHTML = `
-<div class="flex flex-col items-center justify-center py-20">
-<div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-<p class="mt-4 text-lg text-indigo-600">Loading initial headlines...</p>
-</div>
-`;
-}
-function renderArticleCard(article) {
-const cardClasses = article.isBreaking 
-? 'border-2 border-red-500 ring-4 ring-red-200 shadow-2xl' 
-: 'shadow-md'; 
-const breakingTag = article.isBreaking 
-? `<div class="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold py-1 px-3 rounded-full shadow-lg flex items-center live-badge-pulse">
-<svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-LIVE PHOTO
-</div>`
-: '';
-return `
-<div class="bg-white rounded-xl overflow-hidden mb-6 hover:shadow-xl transition duration-300 transform hover:scale-[1.01] ${cardClasses}">
-<div class="cursor-pointer" onclick="renderDetailPage('${article.id}')">
-<div class="relative">
-<img class="w-full h-48 object-cover" src="${article.imageUrl}" alt="${article.title}">
-${breakingTag}
-</div>
-<div class="p-5">
-<div class="flex justify-between items-center text-xs mb-2">
-<span class="text-indigo-600 font-bold">${article.source.toUpperCase()}</span>
-<span class="text-gray-500">${formatDate(article.publishedAt)}</span>
-</div>
-<h2 class="text-xl font-semibold text-gray-900 mb-2 leading-snug">${article.title}</h2>
-<p class="text-gray-600 text-sm">${article.summary}</p>
-</div>
-</div>
-</div>
-`;
-}
-function renderArticleList() {
-const contentDiv = document.getElementById('content');
-let html = articles.map(renderArticleCard).join('');
-html += `
-<div class="fixed bottom-4 right-4 md:bottom-8 md:right-8">
-<button onclick="refreshData()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transition duration-300 flex items-center">
-<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m15.356 2H21v-5m-9-3v8"></path></svg>
-Refresh
-</button>
-</div>
-`;
-contentDiv.innerHTML = html;
-}
-function renderDetailPage(articleId) {
-const article = articles.find(a => a.id === articleId);
-if (!article) return;
-const contentDiv = document.getElementById('content');
-const detailHtml = `
-<div class="pb-16">
-<button onclick="renderArticleList()" class="text-indigo-600 hover:text-indigo-800 flex items-center mb-6">
-<svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-Back to Feed
-</button>
-<img class="w-full h-64 object-cover rounded-xl shadow-lg mb-6" src="${article.imageUrl}" alt="${article.title}">
-${article.isBreaking ? '<span class="inline-block bg-red-100 text-red-600 text-xs font-semibold px-3 py-1 rounded-full mb-4">BREAKING NEWS</span>' : ''}
-<h1 class="text-4xl font-extrabold text-gray-900 mb-4">${article.title}</h1>
-<div class="flex items-center text-sm text-gray-500 mb-8">
-<span class="mr-4">By <span class="font-semibold text-gray-700">${article.author}</span></span>
-<span class="mr-4">• ${article.source}</span>
-<span>• ${formatDate(article.publishedAt)}</span>
-</div>
-<div class="text-lg text-gray-700 leading-relaxed space-y-6">
-<p>${article.summary} ${article.summary}</p>
-<p>A detailed follow-up on the situation reveals new information. Experts suggest the rapid change in the market is unprecedented, and cautionary measures are being advised across the board. The regulatory bodies are expected to release a statement later today regarding the implications of this event on future policy. This is the main body of the article, providing in-depth analysis and quotes from key stakeholders. (Simulated long-form content)</p>
-<p>Further developments are anticipated. We will continue to update our live feed as more information becomes available. The key takeaway remains the need for immediate attention from all parties involved. Please stay tuned.</p>
-</div>
-</div>
-`;
-contentDiv.innerHTML = detailHtml;
-}
-async function refreshData() {
-renderLoading();
-articles = await fetchInitialHeadlines();
-renderArticleList();
-}
-document.addEventListener('DOMContentLoaded', async () => {
-renderLoading();
-articles = await fetchInitialHeadlines();
-isLoading = false;
-renderArticleList();
-startLiveFeed(); // Start the live feed simulator
-});
-</script>
+        /* --- New Snowfall Styles --- */
+        @keyframes snowfall {
+            0% { transform: translateY(-100%); opacity: 0.8; }
+            100% { transform: translateY(100vh); opacity: 0.5; }
+        }
+        .snowflake {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10; /* Above the dark background */
+        }
+    </style>
+</head>
+<!-- Updated body class for winter theme -->
+<body class="bg-indigo-900 min-h-screen font-sans relative overflow-hidden">
+
+    <!-- Snow Container for the effect -->
+    <div id="snow-container" class="absolute inset-0 z-10 pointer-events-none"></div>
+
+    <!-- Main Application Container (z-20 to be above snow) -->
+    <div id="app-container" class="relative z-20 max-w-3xl mx-auto shadow-2xl bg-white min-h-screen">
+        
+        <!-- Header -->
+        <header class="p-6 border-b border-gray-200">
+            <h1 class="text-3xl font-extrabold text-gray-900">Live Feed Dashboard</h1>
+            <p class="text-sm text-gray-500 mt-1">Real-time headlines delivered right now.</p>
+        </header>
+
+        <!-- Dynamic Content Area -->
+        <main id="content" class="p-6"></main>
+    </div>
+
+    <!-- Breaking News SnackBar Placeholder -->
+    <div id="snackbar-container" class="fixed bottom-4 w-full flex justify-center z-50 pointer-events-none">
+        <div id="snackbar" class="bg-red-600 text-white p-4 rounded-lg shadow-2xl transition-opacity duration-300 opacity-0 transform translate-y-4 max-w-sm pointer-events-auto">
+            <div class="flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                <span class="font-bold">BREAKING: </span>
+                <span id="snackbar-title" class="ml-1 truncate"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. DATA MODELS & MOCK SERVICE ---
+
+        let articles = [];
+        let isLoading = true;
+        let lastBreakingId = null;
+
+        function createArticle(isBreaking = false) {
+            const sources = ['TechCrunch', 'CNN', 'BBC', 'The Verge', 'Bloomberg'];
+            const topics = [
+                'AI Revolution', 'Stock Market Surge', 'Global Climate Pact',
+                'New Space Telescope Findings', 'E-Sports Championship Final', 'Major Software Bug Alert'
+            ];
+            const randomSource = sources[Math.floor(Math.random() * sources.length)];
+            const randomTopic = topics[Math.floor(Math.random() * topics.length)];
+            const publishedAt = new Date();
+            const seed = Math.floor(Math.random() * 10000);
+
+            return {
+                id: publishedAt.getTime().toString() + seed,
+                title: `${randomTopic}: Market Reaction and Expert Analysis`,
+                summary: 'This is a brief summary describing the impact and initial public response to the major event. Analysts expect volatility in the coming days.',
+                author: `Reporter ${Math.floor(Math.random() * 100)}`,
+                source: randomSource,
+                publishedAt: publishedAt,
+                imageUrl: `https://placehold.co/400x200/4F46E5/ffffff?text=${randomSource.toUpperCase()}-${seed}`, // Added seed to image text
+                isBreaking: isBreaking,
+            };
+        }
+
+        function fetchInitialHeadlines() {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    const initialArticles = Array.from({ length: 10 }, () => createArticle());
+                    resolve(initialArticles);
+                }, 2000); // Simulate 2-second network lag
+            });
+        }
+
+        // --- 2. STATE & LIVE FEED LOGIC ---
+
+        function startLiveFeed() {
+            // New article generation every 15 seconds
+            setInterval(() => {
+                const isBreaking = Math.random() < 0.3; // 30% chance of breaking news
+                const newArticle = createArticle(isBreaking);
+                articles = [newArticle, ...articles]; // Add to the top
+                renderArticleList();
+
+                if (isBreaking) {
+                    showBreakingNewsSnackbar(newArticle);
+                }
+            }, 15000); 
+        }
+
+        function showBreakingNewsSnackbar(article) {
+            if (article.id === lastBreakingId) return; // Prevent double-snackbars
+            lastBreakingId = article.id;
+            
+            const snackbar = document.getElementById('snackbar');
+            const titleEl = document.getElementById('snackbar-title');
+            
+            titleEl.textContent = article.title;
+            
+            snackbar.classList.remove('opacity-0', 'translate-y-4');
+            snackbar.classList.add('opacity-100', 'translate-y-0');
+
+            // Hide after 5 seconds
+            setTimeout(() => {
+                snackbar.classList.remove('opacity-100', 'translate-y-0');
+                snackbar.classList.add('opacity-0', 'translate-y-4');
+            }, 5000);
+        }
+
+        // --- 3. UI RENDERING FUNCTIONS ---
+
+        function formatDate(date) {
+            const now = new Date();
+            const diff = now - date;
+            const minutes = Math.floor(diff / (1000 * 60));
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+
+            if (minutes < 60) {
+                return `${minutes}m ago`;
+            } else if (hours < 24) {
+                return `${hours}h ago`;
+            } else {
+                return `${date.getMonth() + 1}/${date.getDate()} • ${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
+            }
+        }
+        
+        function renderLoading() {
+            // Updated loading indicator color for contrast against dark background
+            document.getElementById('content').innerHTML = `
+                <div class="flex flex-col items-center justify-center py-20">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-300"></div>
+                    <p class="mt-4 text-lg text-indigo-600">Loading initial headlines...</p>
+                </div>
+            `;
+        }
+
+        function renderArticleCard(article) {
+            // Apply dynamic classes to the card for visual engagement when breaking
+            const cardClasses = article.isBreaking 
+                ? 'border-2 border-red-500 ring-4 ring-red-200 shadow-2xl' 
+                : 'shadow-md'; 
+
+            const breakingTag = article.isBreaking 
+                ? `<div class="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold py-1 px-3 rounded-full shadow-lg flex items-center live-badge-pulse">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    LIVE PHOTO
+                  </div>`
+                : '';
+
+            return `
+                <div class="bg-white rounded-xl overflow-hidden mb-6 hover:shadow-xl transition duration-300 transform hover:scale-[1.01] ${cardClasses}">
+                    <div class="cursor-pointer" onclick="renderDetailPage('${article.id}')">
+                        <div class="relative">
+                            <img class="w-full h-48 object-cover" src="${article.imageUrl}" alt="${article.title}">
+                            ${breakingTag}
+                        </div>
+                        <div class="p-5">
+                            <div class="flex justify-between items-center text-xs mb-2">
+                                <span class="text-indigo-600 font-bold">${article.source.toUpperCase()}</span>
+                                <span class="text-gray-500">${formatDate(article.publishedAt)}</span>
+                            </div>
+                            <h2 class="text-xl font-semibold text-gray-900 mb-2 leading-snug">${article.title}</h2>
+                            <p class="text-gray-600 text-sm">${article.summary}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderArticleList() {
+            const contentDiv = document.getElementById('content');
+            
+            // Build the list HTML
+            let html = articles.map(renderArticleCard).join('');
+
+            // Add the floating refresh button
+            html += `
+                <div class="fixed bottom-4 right-4 md:bottom-8 md:right-8">
+                    <button onclick="refreshData()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transition duration-300 flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m15.356 2H21v-5m-9-3v8"></path></svg>
+                        Refresh
+                    </button>
+                </div>
+            `;
+            
+            contentDiv.innerHTML = html;
+        }
+
+        function renderDetailPage(articleId) {
+            const article = articles.find(a => a.id === articleId);
+            if (!article) return;
+
+            const contentDiv = document.getElementById('content');
+            
+            const detailHtml = `
+                <div class="pb-16">
+                    <button onclick="renderArticleList()" class="text-indigo-600 hover:text-indigo-800 flex items-center mb-6">
+                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                        Back to Feed
+                    </button>
+                    
+                    <img class="w-full h-64 object-cover rounded-xl shadow-lg mb-6" src="${article.imageUrl}" alt="${article.title}">
+
+                    ${article.isBreaking ? '<span class="inline-block bg-red-100 text-red-600 text-xs font-semibold px-3 py-1 rounded-full mb-4">BREAKING NEWS</span>' : ''}
+
+                    <h1 class="text-4xl font-extrabold text-gray-900 mb-4">${article.title}</h1>
+                    
+                    <div class="flex items-center text-sm text-gray-500 mb-8">
+                        <span class="mr-4">By <span class="font-semibold text-gray-700">${article.author}</span></span>
+                        <span class="mr-4">• ${article.source}</span>
+                        <span>• ${formatDate(article.publishedAt)}</span>
+                    </div>
+
+                    <div class="text-lg text-gray-700 leading-relaxed space-y-6">
+                        <p>${article.summary} ${article.summary}</p>
+                        <p>A detailed follow-up on the situation reveals new information. Experts suggest the rapid change in the market is unprecedented, and cautionary measures are being advised across the board. The regulatory bodies are expected to release a statement later today regarding the implications of this event on future policy. This is the main body of the article, providing in-depth analysis and quotes from key stakeholders. (Simulated long-form content)</p>
+                        <p>Further developments are anticipated. We will continue to update our live feed as more information becomes available. The key takeaway remains the need for immediate attention from all parties involved. Please stay tuned.</p>
+                    </div>
+                </div>
+            `;
+            contentDiv.innerHTML = detailHtml;
+        }
+
+        async function refreshData() {
+            renderLoading();
+            articles = await fetchInitialHeadlines();
+            renderArticleList();
+        }
+
+        // --- 4. SNOW EFFECT LOGIC ---
+
+        function createSnowflakes() {
+            const snowContainer = document.getElementById('snow-container');
+            const numberOfSnowflakes = 50;
+
+            for (let i = 0; i < numberOfSnowflakes; i++) {
+                const flake = document.createElement('div');
+                flake.classList.add('snowflake');
+                
+                // Randomize size
+                const size = Math.random() * 3 + 2; // 2px to 5px
+                flake.style.width = `${size}px`;
+                flake.style.height = `${size}px`;
+                
+                // Randomize horizontal position
+                flake.style.left = `${Math.random() * 100}vw`;
+                
+                // Randomize animation duration (speed) and delay
+                const duration = Math.random() * 10 + 10; // 10s to 20s
+                const delay = Math.random() * 10; // 0s to 10s
+                
+                flake.style.animationName = 'snowfall';
+                flake.style.animationDuration = `${duration}s`;
+                flake.style.animationDelay = `-${delay}s`;
+                flake.style.animationIterationCount = 'infinite';
+                
+                // Add horizontal drift variation
+                flake.style.animationTimingFunction = 'linear';
+                flake.style.setProperty('--initial-x', `${Math.random() * 100}vw`);
+                flake.style.setProperty('--final-x', `${Math.random() * 100}vw`);
+                
+                // Adjust animation keyframes style property for horizontal movement
+                const styleSheet = document.styleSheets[0];
+                const keyframesRule = `@keyframes snowfall-${i} {
+                    0% { transform: translateY(-100%) translateX(var(--initial-x)); opacity: 0.8; }
+                    100% { transform: translateY(100vh) translateX(var(--final-x)); opacity: 0.5; }
+                }`;
+                styleSheet.insertRule(keyframesRule, styleSheet.cssRules.length);
+                flake.style.animationName = `snowfall-${i}`;
+                
+                snowContainer.appendChild(flake);
+            }
+        }
+
+
+        // --- 5. INITIALIZATION ---
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            createSnowflakes(); // Start the snow effect
+            renderLoading();
+            articles = await fetchInitialHeadlines();
+            isLoading = false;
+            renderArticleList();
+            startLiveFeed(); // Start the live feed simulator
+        });
+    </script>
 </body>
 </html>
-
-
-
