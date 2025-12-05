@@ -176,32 +176,24 @@
             
             contentDiv.innerHTML = html;
         }
-
         function renderDetailPage(articleId) {
             const article = articles.find(a => a.id === articleId);
             if (!article) return;
-
-            const contentDiv = document.getElementById('content');
-            
+            const contentDiv = document.getElementById('content');     
             const detailHtml = `
                 <div class="pb-16">
                     <button onclick="renderArticleList()" class="text-indigo-600 hover:text-indigo-800 flex items-center mb-6">
                         <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                         Back to Feed
-                    </button>
-                    
+                    </button>            
                     <img class="w-full h-64 object-cover rounded-xl shadow-lg mb-6" src="${article.imageUrl}" alt="${article.title}">
-
                     ${article.isBreaking ? '<span class="inline-block bg-red-100 text-red-600 text-xs font-semibold px-3 py-1 rounded-full mb-4">BREAKING NEWS</span>' : ''}
-
-                    <h1 class="text-4xl font-extrabold text-gray-900 mb-4">${article.title}</h1>
-                    
+                    <h1 class="text-4xl font-extrabold text-gray-900 mb-4">${article.title}</h1>   
                     <div class="flex items-center text-sm text-gray-500 mb-8">
                         <span class="mr-4">By <span class="font-semibold text-gray-700">${article.author}</span></span>
                         <span class="mr-4">• ${article.source}</span>
                         <span>• ${formatDate(article.publishedAt)}</span>
                     </div>
-
                     <div class="text-lg text-gray-700 leading-relaxed space-y-6">
                         <p>${article.summary} ${article.summary}</p>
                         <p>A detailed follow-up on the situation reveals new information. Experts suggest the rapid change in the market is unprecedented, and cautionary measures are being advised across the board. The regulatory bodies are expected to release a statement later today regarding the implications of this event on future policy. This is the main body of the article, providing in-depth analysis and quotes from key stakeholders. (Simulated long-form content)</p>
@@ -211,46 +203,31 @@
             `;
             contentDiv.innerHTML = detailHtml;
         }
-
         async function refreshData() {
             renderLoading();
             articles = await fetchInitialHeadlines();
             renderArticleList();
         }
-
-        // --- 4. SNOW EFFECT LOGIC ---
-
         function createSnowflakes() {
             const snowContainer = document.getElementById('snow-container');
             const numberOfSnowflakes = 50;
-
             for (let i = 0; i < numberOfSnowflakes; i++) {
                 const flake = document.createElement('div');
                 flake.classList.add('snowflake');
-                
-                // Randomize size
                 const size = Math.random() * 3 + 2; // 2px to 5px
                 flake.style.width = `${size}px`;
                 flake.style.height = `${size}px`;
-                
-                // Randomize horizontal position
                 flake.style.left = `${Math.random() * 100}vw`;
-                
-                // Randomize animation duration (speed) and delay
                 const duration = Math.random() * 10 + 10; // 10s to 20s
-                const delay = Math.random() * 10; // 0s to 10s
-                
+                const delay = Math.random() * 10; // 0s to 10s         
                 flake.style.animationName = 'snowfall';
                 flake.style.animationDuration = `${duration}s`;
                 flake.style.animationDelay = `-${delay}s`;
                 flake.style.animationIterationCount = 'infinite';
-                
-                // Add horizontal drift variation
                 flake.style.animationTimingFunction = 'linear';
                 flake.style.setProperty('--initial-x', `${Math.random() * 100}vw`);
                 flake.style.setProperty('--final-x', `${Math.random() * 100}vw`);
-                
-                // Adjust animation keyframes style property for horizontal movement
+
                 const styleSheet = document.styleSheets[0];
                 const keyframesRule = `@keyframes snowfall-${i} {
                     0% { transform: translateY(-100%) translateX(var(--initial-x)); opacity: 0.8; }
@@ -277,6 +254,7 @@
     </script>
 </body>
 </html>
+
 
 
 
