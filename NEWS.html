@@ -14,7 +14,7 @@
             border-radius: 4px;
         }
         ::-webkit-scrollbar-track {
-            background-color: #312E81; /* Dark track for theme */
+            background-color: #312E81; 
         }
         @keyframes live-pulse {
             0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
@@ -33,7 +33,7 @@
             background: white;
             border-radius: 50%;
             pointer-events: none;
-            z-index: 10; /* Above the dark background */
+            z-index: 10; 
         }
     </style>
 </head>
@@ -76,7 +76,7 @@
                 author: `Reporter ${Math.floor(Math.random() * 100)}`,
                 source: randomSource,
                 publishedAt: publishedAt,
-                imageUrl: `https://placehold.co/400x200/4F46E5/ffffff?text=${randomSource.toUpperCase()}-${seed}`, // Added seed to image text
+                imageUrl: `https://placehold.co/400x200/4F46E5/ffffff?text=${randomSource.toUpperCase()}-${seed}`, 
                 isBreaking: isBreaking,
             };
         }
@@ -85,14 +85,14 @@
                 setTimeout(() => {
                     const initialArticles = Array.from({ length: 10 }, () => createArticle());
                     resolve(initialArticles);
-                }, 2000); // Simulate 2-second network lag
+                }, 2000); 
             });
         }
         function startLiveFeed() {
             setInterval(() => {
-                const isBreaking = Math.random() < 0.3; // 30% chance of breaking news
+                const isBreaking = Math.random() < 0.3;
                 const newArticle = createArticle(isBreaking);
-                articles = [newArticle, ...articles]; // Add to the top
+                articles = [newArticle, ...articles]; 
                 renderArticleList();
                 if (isBreaking) {
                     showBreakingNewsSnackbar(newArticle);
@@ -100,7 +100,7 @@
             }, 15000); 
         }
         function showBreakingNewsSnackbar(article) {
-            if (article.id === lastBreakingId) return; // Prevent double-snackbars
+            if (article.id === lastBreakingId) return; 
             lastBreakingId = article.id;  
             const snackbar = document.getElementById('snackbar');
             const titleEl = document.getElementById('snackbar-title');
@@ -248,6 +248,7 @@
     </script>
 </body>
 </html>
+
 
 
 
