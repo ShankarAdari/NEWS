@@ -214,12 +214,12 @@
             for (let i = 0; i < numberOfSnowflakes; i++) {
                 const flake = document.createElement('div');
                 flake.classList.add('snowflake');
-                const size = Math.random() * 3 + 2; // 2px to 5px
+                const size = Math.random() * 3 + 2; 
                 flake.style.width = `${size}px`;
                 flake.style.height = `${size}px`;
                 flake.style.left = `${Math.random() * 100}vw`;
-                const duration = Math.random() * 10 + 10; // 10s to 20s
-                const delay = Math.random() * 10; // 0s to 10s         
+                const duration = Math.random() * 10 + 10; 
+                const delay = Math.random() * 10;          
                 flake.style.animationName = 'snowfall';
                 flake.style.animationDuration = `${duration}s`;
                 flake.style.animationDelay = `-${delay}s`;
@@ -238,17 +238,16 @@
             }
         }
         document.addEventListener('DOMContentLoaded', async () => {
-            createSnowflakes(); // Start the snow effect
+            createSnowflakes(); 
             renderLoading();
             articles = await fetchInitialHeadlines();
             isLoading = false;
             renderArticleList();
-            startLiveFeed(); // Start the live feed simulator
+            startLiveFeed(); 
         });
     </script>
 </body>
 </html>
-
 
 
 
