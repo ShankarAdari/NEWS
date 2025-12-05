@@ -15,3 +15,5 @@ Applied new features like alert for latest news
 5-12-25
 <img width="1157" height="635" alt="image" src="https://github.com/user-attachments/assets/31af7b74-db42-44d7-b37d-baef2695d59e" />
 
+Applied new customizations and designs
+added snow effect in the background
