@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Universal Live News Feed</title>
-    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         ::-webkit-scrollbar {
@@ -56,14 +55,10 @@
             </div>
         </div>
     </div>
-
     <script>
-        // --- 1. DATA MODELS & MOCK SERVICE ---
-
         let articles = [];
         let isLoading = true;
         let lastBreakingId = null;
-
         function createArticle(isBreaking = false) {
             const sources = ['TechCrunch', 'CNN', 'BBC', 'The Verge', 'Bloomberg'];
             const topics = [
@@ -74,7 +69,6 @@
             const randomTopic = topics[Math.floor(Math.random() * topics.length)];
             const publishedAt = new Date();
             const seed = Math.floor(Math.random() * 10000);
-
             return {
                 id: publishedAt.getTime().toString() + seed,
                 title: `${randomTopic}: Market Reaction and Expert Analysis`,
@@ -86,7 +80,6 @@
                 isBreaking: isBreaking,
             };
         }
-
         function fetchInitialHeadlines() {
             return new Promise(resolve => {
                 setTimeout(() => {
@@ -95,9 +88,6 @@
                 }, 2000); // Simulate 2-second network lag
             });
         }
-
-        // --- 2. STATE & LIVE FEED LOGIC ---
-
         function startLiveFeed() {
             // New article generation every 15 seconds
             setInterval(() => {
@@ -310,5 +300,6 @@
     </script>
 </body>
 </html>
+
 
 
