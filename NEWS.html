@@ -89,46 +89,34 @@
             });
         }
         function startLiveFeed() {
-            // New article generation every 15 seconds
             setInterval(() => {
                 const isBreaking = Math.random() < 0.3; // 30% chance of breaking news
                 const newArticle = createArticle(isBreaking);
                 articles = [newArticle, ...articles]; // Add to the top
                 renderArticleList();
-
                 if (isBreaking) {
                     showBreakingNewsSnackbar(newArticle);
                 }
             }, 15000); 
         }
-
         function showBreakingNewsSnackbar(article) {
             if (article.id === lastBreakingId) return; // Prevent double-snackbars
-            lastBreakingId = article.id;
-            
+            lastBreakingId = article.id;  
             const snackbar = document.getElementById('snackbar');
             const titleEl = document.getElementById('snackbar-title');
-            
-            titleEl.textContent = article.title;
-            
+            titleEl.textContent = article.title; 
             snackbar.classList.remove('opacity-0', 'translate-y-4');
             snackbar.classList.add('opacity-100', 'translate-y-0');
-
-            // Hide after 5 seconds
             setTimeout(() => {
                 snackbar.classList.remove('opacity-100', 'translate-y-0');
                 snackbar.classList.add('opacity-0', 'translate-y-4');
             }, 5000);
         }
-
-        // --- 3. UI RENDERING FUNCTIONS ---
-
         function formatDate(date) {
             const now = new Date();
             const diff = now - date;
             const minutes = Math.floor(diff / (1000 * 60));
             const hours = Math.floor(diff / (1000 * 60 * 60));
-
             if (minutes < 60) {
                 return `${minutes}m ago`;
             } else if (hours < 24) {
@@ -137,7 +125,6 @@
                 return `${date.getMonth() + 1}/${date.getDate()} • ${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
             }
         }
-        
         function renderLoading() {
             // Updated loading indicator color for contrast against dark background
             document.getElementById('content').innerHTML = `
@@ -300,6 +287,7 @@
     </script>
 </body>
 </html>
+
 
 
 
