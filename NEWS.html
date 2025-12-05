@@ -126,7 +126,6 @@
             }
         }
         function renderLoading() {
-            // Updated loading indicator color for contrast against dark background
             document.getElementById('content').innerHTML = `
                 <div class="flex flex-col items-center justify-center py-20">
                     <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-300"></div>
@@ -134,20 +133,16 @@
                 </div>
             `;
         }
-
         function renderArticleCard(article) {
-            // Apply dynamic classes to the card for visual engagement when breaking
             const cardClasses = article.isBreaking 
                 ? 'border-2 border-red-500 ring-4 ring-red-200 shadow-2xl' 
                 : 'shadow-md'; 
-
             const breakingTag = article.isBreaking 
                 ? `<div class="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold py-1 px-3 rounded-full shadow-lg flex items-center live-badge-pulse">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     LIVE PHOTO
                   </div>`
                 : '';
-
             return `
                 <div class="bg-white rounded-xl overflow-hidden mb-6 hover:shadow-xl transition duration-300 transform hover:scale-[1.01] ${cardClasses}">
                     <div class="cursor-pointer" onclick="renderDetailPage('${article.id}')">
@@ -167,14 +162,9 @@
                 </div>
             `;
         }
-
         function renderArticleList() {
             const contentDiv = document.getElementById('content');
-            
-            // Build the list HTML
             let html = articles.map(renderArticleCard).join('');
-
-            // Add the floating refresh button
             html += `
                 <div class="fixed bottom-4 right-4 md:bottom-8 md:right-8">
                     <button onclick="refreshData()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transition duration-300 flex items-center">
@@ -287,6 +277,7 @@
     </script>
 </body>
 </html>
+
 
 
 
