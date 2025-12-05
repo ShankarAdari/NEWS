@@ -227,7 +227,6 @@
                 flake.style.animationTimingFunction = 'linear';
                 flake.style.setProperty('--initial-x', `${Math.random() * 100}vw`);
                 flake.style.setProperty('--final-x', `${Math.random() * 100}vw`);
-
                 const styleSheet = document.styleSheets[0];
                 const keyframesRule = `@keyframes snowfall-${i} {
                     0% { transform: translateY(-100%) translateX(var(--initial-x)); opacity: 0.8; }
@@ -235,14 +234,9 @@
                 }`;
                 styleSheet.insertRule(keyframesRule, styleSheet.cssRules.length);
                 flake.style.animationName = `snowfall-${i}`;
-                
                 snowContainer.appendChild(flake);
             }
         }
-
-
-        // --- 5. INITIALIZATION ---
-
         document.addEventListener('DOMContentLoaded', async () => {
             createSnowflakes(); // Start the snow effect
             renderLoading();
@@ -254,8 +248,6 @@
     </script>
 </body>
 </html>
-
-
 
 
 
