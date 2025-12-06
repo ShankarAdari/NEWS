@@ -163,7 +163,7 @@
                 link: 'text-indigo-600 hover:text-indigo-800',
                 cardClass: 'bg-white',
                 headerClass: 'bg-white',
-                showEffects: (hour) => hour < 5 || hour >= 19, // Night time
+                showEffects: (hour) => hour < 5 || hour >= 19,
             },
             'forest-elegance': {
                 name: 'Forest Elegance',
@@ -174,7 +174,7 @@
                 link: 'forest-elegance-link hover:underline',
                 cardClass: 'forest-elegance-card',
                 headerClass: 'forest-elegance-header',
-                showEffects: () => false, // No effects for custom themes
+                showEffects: () => false, 
             },
             'warm-sepia': {
                 name: 'Warm Sepia',
@@ -199,10 +199,6 @@
                 showEffects: () => false,
             },
         };
-        
-        // --- 2. BGM SETUP (Refactored for Multiple Tracks) ---
-        
-        // State object to manage the current BGM track
         let BGM_PLAYER = {
             synth: null,
             loop: null,
@@ -755,6 +751,7 @@
     </script>
 </body>
 </html>
+
 
 
 
