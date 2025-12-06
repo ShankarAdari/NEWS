@@ -218,7 +218,6 @@
                         envelope: { attack: 2, decay: 1, sustain: 0.5, release: 5 }
                     }).toDestination();
                     Tone.Transport.bpm.value = 40;
-                    // Cmaj7 chord loop (C4, E4, G4, B4)
                     player.loop = new Tone.Loop(time => {
                         player.synth.triggerAttackRelease(["C4", "E4", "G4", "B4"], "4n", time);
                     }, "4n");
@@ -236,7 +235,6 @@
                     Tone.Transport.bpm.value = 120;
                     const pattern = ["F3", "A3", "C4", "G3"];
                     let index = 0;
-                    // Simple repeating bass/lead line
                     player.loop = new Tone.Loop(time => {
                         const note = pattern[index % pattern.length];
                         player.synth.triggerAttackRelease(note, "8n", time);
@@ -254,10 +252,9 @@
                         envelope: { attack: 0.01, decay: 0.4, sustain: 0.1, release: 0.5 }
                     }).toDestination();
                     Tone.Transport.bpm.value = 80;
-                    const chordA = ["D3", "F3", "A3"]; // D minor
-                    const chordB = ["A#2", "D3", "F3"]; // B-flat Major (creates dissonance)
+                    const chordA = ["D3", "F3", "A3"]; 
+                    const chordB = ["A#2", "D3", "F3"]; 
                     let index = 0;
-                    // Alternating between two chords every measure
                     player.loop = new Tone.Loop(time => {
                         const chord = index % 2 === 0 ? chordA : chordB;
                         player.synth.triggerAttackRelease(chord, "2n", time, 0.5); 
@@ -266,11 +263,9 @@
                 }
             }
         };
-
         function stopBGM() {
             if (BGM_PLAYER.synth) {
                 BGM_PLAYER.synth.releaseAll();
-                // Clean up Tone.js objects
                 BGM_PLAYER.synth.dispose();
                 BGM_PLAYER.synth = null;
             }
@@ -282,62 +277,41 @@
             Tone.Transport.stop();
             BGM_PLAYER.isPlaying = false;
         }
-
-        /**
-         * Starts a new BGM track, stopping the old one first.
-         * @param {string} trackId - ID from BGM_PRESETS
-         */
         async function startBGM(trackId) {
-            // Tone.js requires user interaction to start the audio context
             await Tone.start();
-            
-            // Stop any currently playing track
             stopBGM();
-
             if (trackId === 'off') {
                 BGM_PLAYER.currentTrackId = 'off';
                 updateBGMSelectUI();
                 return;
             }
-
             const preset = BGM_PRESETS[trackId];
             if (!preset) return;
-
             try {
-                // Setup synth and loop using the preset's function
                 preset.setup(BGM_PLAYER);
                 BGM_PLAYER.synth.volume.value = preset.volume;
-
-                // Start transport and loop
                 BGM_PLAYER.loop.start(0);
                 Tone.Transport.start();
-                
                 BGM_PLAYER.isPlaying = true;
                 BGM_PLAYER.currentTrackId = trackId;
             } catch (error) {
                 console.error("Error starting BGM track:", error);
-                // Fallback to 'off' if setup fails
                 stopBGM();
                 BGM_PLAYER.currentTrackId = 'off';
             }
             updateBGMSelectUI();
         }
-
         function toggleBGMPlayback() {
              if (BGM_PLAYER.currentTrackId === 'off') {
-                 // If current track is 'off', switch to 'ambient' and play
                  startBGM('ambient');
              } else if (BGM_PLAYER.isPlaying) {
-                 // If playing, stop and keep the current track selected
                  stopBGM();
                  BGM_PLAYER.currentTrackId = document.getElementById('bgm-select').value; // Keep select value
                  updateBGMSelectUI();
              } else {
-                 // If stopped, resume the current track
                  startBGM(BGM_PLAYER.currentTrackId);
              }
         }
-
         function handleBGMChange(event) {
             const trackId = event.target.value;
             startBGM(trackId);
@@ -751,6 +725,7 @@
     </script>
 </body>
 </html>
+
 
 
 
