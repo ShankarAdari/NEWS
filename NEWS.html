@@ -407,18 +407,14 @@
                 };
                 container.appendChild(button);
             });
-            
-            // 2. Add BGM Dropdown
             const bgmDiv = document.createElement('div');
             bgmDiv.className = 'pt-4 border-t border-gray-200 mt-4';
             bgmDiv.innerHTML = `
                 <h3 class="font-semibold text-gray-700 mb-2">Ambient Background Music</h3>
-                
                 <!-- Music Toggle Button -->
                 <button id="bgm-master-toggle" onclick="toggleBGMPlayback()" class="w-full py-2 px-3 rounded-lg flex items-center justify-center text-sm font-bold transition duration-200 mb-3">
                     <!-- Initial state set by updateBGMSelectUI -->
                 </button>
-
                 <!-- Music Track Selection -->
                 <select id="bgm-select" onchange="handleBGMChange(event)" class="w-full p-2 border border-gray-300 rounded-lg text-gray-800">
                     ${Object.keys(BGM_PRESETS).map(id => 
@@ -427,11 +423,8 @@
                 </select>
             `;
             container.appendChild(bgmDiv);
-            updateBGMSelectUI(); // Set the initial state of the dropdown and toggle button
-        }
-        
-        // --- 4. DATA AND MOCK SERVICE (Unchanged) ---
-        
+            updateBGMSelectUI();
+        }        
         function createArticle(isBreaking = false) {
             const sources = ['TechCrunch', 'CNN', 'BBC', 'The Verge', 'Bloomberg'];
             const topics = [
@@ -442,7 +435,6 @@
             const randomTopic = topics[Math.floor(Math.random() * topics.length)];
             const publishedAt = new Date();
             const seed = Math.floor(Math.random() * 10000);
-
             return {
                 id: publishedAt.getTime().toString() + seed,
                 title: `${randomTopic}: Market Reaction and Expert Analysis`,
@@ -454,7 +446,6 @@
                 isBreaking: isBreaking,
             };
         }
-
         function fetchInitialHeadlines() {
             return new Promise(resolve => {
                 setTimeout(() => {
@@ -463,7 +454,6 @@
                 }, 2000); 
             });
         }
-
         function startLiveFeed() {
             setInterval(() => {
                 const isBreaking = Math.random() < 0.3; 
@@ -475,40 +465,27 @@
                 }
             }, 15000); 
         }
-
         function showBreakingNewsSnackbar(article) {
             if (article.id === lastBreakingId) return;
-            lastBreakingId = article.id;
-            
+            lastBreakingId = article.id; 
             const snackbar = document.getElementById('snackbar');
             const titleEl = document.getElementById('snackbar-title');
             const appContainer = document.getElementById('app-container');
-
             titleEl.textContent = article.title;
-            
-            // Apply Dynamic Mood Effect (Dimming/Saturation)
             appContainer.classList.add('mood-effect-active');
-
-            // Show Snackbar
             snackbar.classList.remove('opacity-0', 'translate-y-4');
             snackbar.classList.add('opacity-100', 'translate-y-0');
-
             setTimeout(() => {
-                // Remove mood effect and hide snackbar
                 appContainer.classList.remove('mood-effect-active');
                 snackbar.classList.remove('opacity-100', 'translate-y-0');
                 snackbar.classList.add('opacity-0', 'translate-y-4');
             }, 5000);
         }
-
-        // --- 5. UI RENDERING FUNCTIONS (Unchanged) ---
-
         function formatDate(date) {
             const now = new Date();
             const diff = now - date;
             const minutes = Math.floor(diff / (1000 * 60));
             const hours = Math.floor(diff / (1000 * 60 * 60));
-
             if (minutes < 60) {
                 return `${minutes}m ago`;
             } else if (hours < 24) {
@@ -517,7 +494,6 @@
                 return `${date.getMonth() + 1}/${date.getDate()} • ${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
             }
         }
-        
         function renderLoading() {
             const theme = THEME_MAP[currentThemeId];
             document.getElementById('content').innerHTML = `
@@ -687,6 +663,7 @@
     </script>
 </body>
 </html>
+
 
 
 
