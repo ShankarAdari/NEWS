@@ -344,7 +344,6 @@
             body.className = body.className.split(' ').filter(cls => !Object.values(THEME_MAP).some(t => t.bodyClass.includes(cls))).join(' ');
             appContainer.className = appContainer.className.split(' ').filter(cls => !cls.startsWith('shadow-') && !cls.startsWith('bg-') && !cls.startsWith('border-')).join(' ');
             header.className = header.className.split(' ').filter(cls => !cls.startsWith('bg-') && !cls.startsWith('border-') && !cls.startsWith('text-')).join(' ');
-
             if (themeId === 'default-auto') {
                 const hour = new Date().getHours();
                 let skyClass;
@@ -356,24 +355,14 @@
             } else {
                 body.classList.add(...theme.bodyClass, 'min-h-screen', 'font-sans', 'relative');
             }
-
-            // 3. Apply common classes to main UI blocks
-            // Note: Card class from theme map is now applied here
             appContainer.classList.add('relative', 'z-20', 'max-w-3xl', 'mx-auto', 'shadow-2xl', 'min-h-screen', theme.cardClass, 'rounded-lg');
             header.classList.add('p-6', 'border-b', 'transition-colors', 'duration-500', theme.headerClass);
-
-            // 4. Update Header and Text Colors
             document.getElementById('header-title').className = `text-3xl font-extrabold ${theme.textPrimary}`;
             document.getElementById('header-subtitle').className = `text-sm mt-1 ${theme.textSecondary}`;
-
-            // 5. Update Accents (Buttons, refresh button, theme button)
             if (refreshBtn) {
-                // Ensure to remove fixed classes for the refresh button before adding new ones
                 refreshBtn.className = `font-bold py-3 px-6 rounded-full shadow-lg transition duration-300 flex items-center fixed bottom-4 right-4 md:bottom-8 md:right-8 ${theme.accentClass}`;
             }
             themeToggleBtn.className = `fixed top-4 right-4 z-50 p-3 rounded-full shadow-xl transition duration-200 ${theme.accentClass}`;
-
-            // 6. Update Effect Visibility
             const hour = new Date().getHours();
             const snowContainer = document.getElementById('snow-container');
             if (theme.showEffects(hour)) {
@@ -381,11 +370,7 @@
             } else {
                 snowContainer.classList.add('effect-hidden');
             }
-            
-            // 7. Re-render list to apply new colors to article cards
             renderArticleList();
-            
-            // 8. Highlight selected theme button
             Array.from(themeOptionsContainer.children).forEach(btn => {
                 if (btn.dataset.themeId === themeId) {
                     btn.classList.add('ring-4', 'ring-offset-2', 'ring-indigo-500');
@@ -393,31 +378,23 @@
                     btn.classList.remove('ring-4', 'ring-offset-2', 'ring-indigo-500');
                 }
             });
-            // Update BGM UI (needed if theme changes before BGM is toggled)
             updateBGMSelectUI();
         }
-
         function toggleThemePanel() {
             const panel = document.getElementById('theme-panel');
             panel.classList.toggle('theme-panel-hidden');
         }
-
         function createThemeButtons() {
             const container = document.getElementById('theme-options');
-            container.innerHTML = ''; // Clear previous buttons
-
-            // 1. Create Theme Selection Buttons
+            container.innerHTML = '';
             Object.keys(THEME_MAP).forEach(themeId => {
                 const theme = THEME_MAP[themeId];
                 const button = document.createElement('button');
-                
-                // Determine a preview color based on the theme
                 let previewClass;
                 if (themeId === 'default-auto') previewClass = 'bg-indigo-600';
                 else if (themeId === 'forest-elegance') previewClass = 'bg-green-700';
                 else if (themeId === 'warm-sepia') previewClass = 'bg-amber-800';
                 else if (themeId === 'high-contrast') previewClass = 'bg-black border border-cyan-400';
-
                 button.dataset.themeId = themeId;
                 button.className = `w-full p-3 rounded-lg text-left shadow-md transition duration-200 flex items-center space-x-3 
                                     ${currentThemeId === themeId ? 'ring-4 ring-offset-2 ring-indigo-500' : 'hover:shadow-lg hover:ring-2'}`;
@@ -710,6 +687,7 @@
     </script>
 </body>
 </html>
+
 
 
 
