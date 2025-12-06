@@ -614,19 +614,13 @@
         }
         document.addEventListener('DOMContentLoaded', async () => {
             createBackgroundEffects(); 
-            createThemeButtons(); // Initialize theme buttons and BGM controls
-            
-            // Initial theme application (Auto theme)
+            createThemeButtons(); 
             applyTheme('default-auto'); 
-
-            // Set an interval to re-check the time every 5 minutes 
-            // ONLY if the auto theme is currently active
             setInterval(() => {
                 if (currentThemeId === 'default-auto') {
                     applyTheme('default-auto');
                 }
             }, 300000); 
-
             renderLoading();
             articles = await fetchInitialHeadlines();
             isLoading = false;
@@ -636,20 +630,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
