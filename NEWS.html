@@ -306,7 +306,7 @@
                  startBGM('ambient');
              } else if (BGM_PLAYER.isPlaying) {
                  stopBGM();
-                 BGM_PLAYER.currentTrackId = document.getElementById('bgm-select').value; // Keep select value
+                 BGM_PLAYER.currentTrackId = document.getElementById('bgm-select').value; 
                  updateBGMSelectUI();
              } else {
                  startBGM(BGM_PLAYER.currentTrackId);
@@ -316,16 +316,11 @@
             const trackId = event.target.value;
             startBGM(trackId);
         }
-
         function updateBGMSelectUI() {
             const selectEl = document.getElementById('bgm-select');
             const toggleBtn = document.getElementById('bgm-master-toggle');
             if (!selectEl || !toggleBtn) return;
-            
-            // Set the dropdown value to the current track
             selectEl.value = BGM_PLAYER.currentTrackId;
-
-            // Update the master toggle button's appearance and text
             if (BGM_PLAYER.isPlaying) {
                 toggleBtn.classList.add('bg-green-500', 'hover:bg-green-600', 'text-white');
                 toggleBtn.classList.remove('bg-gray-200', 'hover:bg-gray-300', 'text-gray-700');
@@ -337,29 +332,19 @@
                 toggleBtn.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.636 18.364A9 9 0 015.636 5.636M18 12h-8m-4-4l4 4m-4 0l4-4"/></svg>Music OFF`;
             }
         }
-
-
-        // --- 3. THEME APPLICATION LOGIC (Unchanged) ---
-
         function applyTheme(themeId) {
             currentThemeId = themeId;
             const theme = THEME_MAP[themeId];
             const body = document.body;
             const appContainer = document.getElementById('app-container');
             const header = document.getElementById('app-header');
-            // Check for the refresh button, which may not exist on initial load
             const refreshBtn = document.querySelector('#content button.fixed'); 
             const themeToggleBtn = document.getElementById('theme-toggle-btn');
             const themeOptionsContainer = document.getElementById('theme-options');
-            
-            // 1. Reset all theme classes on elements
             body.className = body.className.split(' ').filter(cls => !Object.values(THEME_MAP).some(t => t.bodyClass.includes(cls))).join(' ');
-            // Remove previous background, shadow, and specific border classes from container
             appContainer.className = appContainer.className.split(' ').filter(cls => !cls.startsWith('shadow-') && !cls.startsWith('bg-') && !cls.startsWith('border-')).join(' ');
-            // Remove previous background, border, and specific text classes from header
             header.className = header.className.split(' ').filter(cls => !cls.startsWith('bg-') && !cls.startsWith('border-') && !cls.startsWith('text-')).join(' ');
 
-            // 2. Apply dynamic background class for body
             if (themeId === 'default-auto') {
                 const hour = new Date().getHours();
                 let skyClass;
@@ -725,6 +710,7 @@
     </script>
 </body>
 </html>
+
 
 
 
