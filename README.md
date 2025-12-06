@@ -20,3 +20,6 @@ added snow effect in the background
 
 6-12-25
 <img width="1205" height="637" alt="image" src="https://github.com/user-attachments/assets/75ec3576-eef7-4fbc-9a16-3c8c2e12baf5" />
+
+Added snow effect in the application
+Live animation of snow which is applicable even after scrolling
