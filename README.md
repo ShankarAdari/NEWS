@@ -23,3 +23,9 @@ added snow effect in the background
 
 Added snow effect in the application
 Live animation of snow which is applicable even after scrolling
+
+7-12-25
+<img width="1307" height="621" alt="image" src="https://github.com/user-attachments/assets/6d5823d7-5417-4783-9d3d-5f9bb00bcdba" />
+
+Added new animation for taps in the background
+NEWS refereshs the NEWS automatically
