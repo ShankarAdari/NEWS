@@ -737,16 +737,12 @@
             document.addEventListener('click', handlePointerClick);
             document.addEventListener('touchend', handlePointerMove); 
             animateInteractiveSnow();
-
-            // Initial theme application
             applyTheme('default-auto'); 
-
             setInterval(() => {
                 if (currentThemeId === 'default-auto') {
                     applyTheme('default-auto');
                 }
             }, 300000); 
-
             renderLoading();
             articles = await fetchInitialHeadlines();
             isLoading = false;
@@ -756,22 +752,4 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
