@@ -706,54 +706,36 @@
                     flake.el.classList.add('snowflake-interact');
                 } else {
                     flake.el.classList.remove('snowflake-interact');
-                    // Reset position when the CSS animation takes over again
-                    // Flake position reset logic is complex due to mixed CSS/JS control, 
-                    // but the CSS 'snowfall' keyframe handles the continuous down-drift when JS is inactive.
                 }
-
-                // Screen wrapping for persistent snow effect
                 if (flake.x < -10) flake.x = window.innerWidth + 10;
                 if (flake.x > window.innerWidth + 10) flake.x = -10;
-                // If it falls off the bottom, wrap to the top
                 if (flake.y > window.innerHeight + 10) {
                     flake.y = -10;
-                    flake.x = Math.random() * window.innerWidth; // new random X
+                    flake.x = Math.random() * window.innerWidth; 
                     flake.vy = 0;
                     flake.vx = 0;
                 }
             });
-
             requestAnimationFrame(animateInteractiveSnow);
         }
-
-        // --- 7. EVENT LISTENERS & INITIALIZATION ---
-
         function handlePointerMove(event) {
-            // Get position based on whether it's a mouse or touch event
             const clientX = event.touches ? event.touches[0].clientX : event.clientX;
             const clientY = event.touches ? event.touches[0].clientY : event.clientY;
             mousePos = { x: clientX, y: clientY };
         }
-
         function handlePointerClick(event) {
-            // Glitter burst on click/tap
             const clientX = event.touches ? event.touches[0].clientX : event.clientX;
             const clientY = event.touches ? event.touches[0].clientY : event.clientY;
             createGlitterBurst(clientX, clientY);
         }
-
         document.addEventListener('DOMContentLoaded', async () => {
             createBackgroundEffects(); 
             createThemeButtons(); 
-            
-            // Set up interactivity handlers
             document.addEventListener('mousemove', handlePointerMove);
             document.addEventListener('touchstart', handlePointerMove);
             document.addEventListener('touchmove', handlePointerMove);
             document.addEventListener('click', handlePointerClick);
-            document.addEventListener('touchend', handlePointerMove); // Reset mousePos on touch end
-
-            // Start the interactive snow loop
+            document.addEventListener('touchend', handlePointerMove); 
             animateInteractiveSnow();
 
             // Initial theme application
@@ -774,6 +756,7 @@
     </script>
 </body>
 </html>
+
 
 
 
