@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Universal Live News Feed</title>
+    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Tone.js for BGM -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
     <style>
+        /* Custom scrollbar styling for a cleaner look */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -14,6 +17,8 @@
             background-color: #9ca3af;
             border-radius: 4px;
         }
+        
+        /* Added: Live Pulse Animation for high engagement */
         @keyframes live-pulse {
             0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
             70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
@@ -22,6 +27,8 @@
         .live-badge-pulse {
             animation: live-pulse 2s infinite;
         }
+
+        /* --- Dynamic Sky Themes (Used in 'default-auto') --- */
         .night-sky {
             background: radial-gradient(circle at center, #37306A 0%, #1E1E4F 70%, #15153a 100%);
         }
@@ -34,52 +41,79 @@
         .sunset-sky {
             background: radial-gradient(circle at bottom, #8A2BE2 0%, #FF8C00 70%, #FF4500 100%);
         }
+        
+        /* --- Manual Custom Themes --- */
+
+        /* Forest Elegance */
         .forest-elegance-bg {
             background: linear-gradient(135deg, #0A360A 0%, #1E4E20 70%, #2E7D32 100%);
         }
         .forest-elegance-accent {
-            background-color: #556B2F; 
-            color: #FFD700; 
+            background-color: #556B2F; /* Dark Olive Green */
+            color: #FFD700; /* Gold text */
         }
         .forest-elegance-text-primary { color: #E8E8E8; }
-        .forest-elegance-text-secondary { color: #D2B48C; } 
+        .forest-elegance-text-secondary { color: #D2B48C; } /* Tan for subtle text */
         .forest-elegance-link { color: #FFD700; }
+        /* Adjusted to use RGBA for layering */
         .forest-elegance-card { background-color: rgba(24, 61, 24, 0.9); }
         .forest-elegance-header { background-color: rgba(24, 61, 24, 0.95); border-color: #556B2F; }
+
+        /* Warm Sepia */
         .warm-sepia-bg {
             background: linear-gradient(180deg, #A8815F 0%, #705B47 50%, #402F2D 100%);
         }
         .warm-sepia-accent {
-            background-color: #D2B48C; 
-            color: #402F2D; 
+            background-color: #D2B48C; /* Tan */
+            color: #402F2D; /* Dark brown text */
         }
         .warm-sepia-text-primary { color: #402F2D; }
         .warm-sepia-text-secondary { color: #705B47; }
-        .warm-sepia-link { color: #CD853F; } 
+        .warm-sepia-link { color: #CD853F; } /* Peru */
+        /* Adjusted to use RGBA for layering */
         .warm-sepia-card { background-color: rgba(248, 244, 227, 0.95); }
         .warm-sepia-header { background-color: rgba(248, 244, 227, 0.98); border-color: #D2B48C; }
+
+
+        /* High Contrast (Accessibility) */
         .high-contrast-bg {
             background-color: #000000;
         }
         .high-contrast-accent {
-            background-color: #00FFFF; 
-            color: #000000; 
+            background-color: #00FFFF; /* Cyan */
+            color: #000000; /* Black text */
             border: 2px solid #FFFFFF;
         }
         .high-contrast-text-primary { color: #FFFFFF; }
         .high-contrast-text-secondary { color: #00FFFF; }
-        .high-contrast-link { color: #FFFF00; } 
+        .high-contrast-link { color: #FFFF00; } /* Yellow */
         .high-contrast-card { background-color: #111111; }
         .high-contrast-header { background-color: #000000; border-color: #333333; }
+        
+        /* --- Dynamic Mood Effect (New) --- */
         .mood-effect-active {
             transition: filter 1s ease-in-out, transform 0.5s;
-            transform: scale(0.99); 
-            filter: brightness(0.9) saturate(1.1); 
+            transform: scale(0.99); /* Subtle zoom effect */
+            filter: brightness(0.9) saturate(1.1); /* Dim slightly and enhance color */
         }
+        
+        /* --- Background Effects (Fixed Positioning for full coverage) --- */
+
+        #snow-container {
+            position: fixed; 
+            inset: 0;
+            z-index: 10;
+            /* Allows mouse events to pass through, crucial for interacting with elements below */
+            pointer-events: none; 
+            overflow: hidden;
+            height: 100vh;
+        }
+
         @keyframes snowfall {
             0% { transform: translateY(-10%) translateX(0); opacity: 0.8; }
             50% { opacity: 1; }
-            100% { transform: translateY(100vh) translateX(5vw); opacity: 0.5; }
+            /* Snow falls beyond the viewport height */
+            100% { transform: translateY(105vh) translateX(5vw); opacity: 0.5; } 
         }
         .snowflake {
             position: absolute;
@@ -90,7 +124,31 @@
             animation-name: snowfall;
             animation-timing-function: linear;
             animation-iteration-count: infinite;
+            /* Added transition for smooth repulsion effect */
+            transition: opacity 0.3s ease, transform 0.3s ease-out; 
         }
+        .snowflake-interact {
+             /* When a snowflake is manually positioned by JS, its CSS animation is paused */
+            animation-play-state: paused !important;
+        }
+        
+        /* GLITTER BURST EFFECT */
+        @keyframes fade-out-burst {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; }
+            100% { opacity: 0; transform: scale(1.5) translate(var(--end-x), var(--end-y)); }
+        }
+
+        .glitter-particle {
+            position: fixed;
+            background: #fff;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 15;
+            animation: fade-out-burst 1.5s forwards;
+            filter: drop-shadow(0 0 2px #fff);
+        }
+
         @keyframes twinkle {
             0%, 100% { opacity: 0.7; }
             50% { opacity: 0.2; }
@@ -107,6 +165,8 @@
             opacity: 0;
             transition: opacity 2s ease-in-out;
         }
+        
+        /* Theme Picker Panel Styling */
         .theme-panel {
             transition: transform 0.3s ease-out, opacity 0.3s ease-out;
         }
@@ -118,27 +178,42 @@
     </style>
 </head>
 <body class="night-sky min-h-screen font-sans relative">
-    <div id="snow-container" class="absolute inset-0 z-10 pointer-events-none overflow-hidden"></div>
+
+    <!-- Snow, Star, and Glitter Container (Fixed to the viewport) -->
+    <div id="snow-container" class="effect-hidden"></div>
+
+    <!-- Theme Picker Button -->
     <button id="theme-toggle-btn" class="fixed top-4 right-4 z-50 p-3 rounded-full bg-indigo-600 text-white shadow-xl hover:bg-indigo-700 transition duration-200" onclick="toggleThemePanel()">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
         </svg>
     </button>
+    
+    <!-- Theme Picker Panel -->
     <div id="theme-panel" class="theme-panel theme-panel-hidden fixed top-0 right-0 h-full w-64 bg-white shadow-2xl z-40 p-6 overflow-y-auto">
         <h2 class="text-xl font-bold mb-4 text-gray-800">Choose Theme</h2>
         <div id="theme-options" class="space-y-4">
+            <!-- Theme buttons and BGM controls will be generated here -->
         </div>
         <button class="w-full mt-6 text-gray-500 hover:text-gray-700 text-sm" onclick="toggleThemePanel()">
             Close
         </button>
     </div>
+
+    <!-- Main Application Container (z-20 to be above effects) -->
     <div id="app-container" class="relative z-20 max-w-3xl mx-auto shadow-2xl bg-white min-h-screen transition-colors duration-500 rounded-lg">
+        
+        <!-- Header -->
         <header id="app-header" class="p-6 border-b border-gray-200 transition-colors duration-500">
             <h1 class="text-3xl font-extrabold text-gray-900" id="header-title">Live Feed Dashboard</h1>
             <p class="text-sm text-gray-500 mt-1" id="header-subtitle">Real-time headlines delivered right now.</p>
         </header>
+
+        <!-- Dynamic Content Area -->
         <main id="content" class="p-6"></main>
     </div>
+
+    <!-- Breaking News SnackBar Placeholder -->
     <div id="snackbar-container" class="fixed bottom-4 w-full flex justify-center z-50 pointer-events-none">
         <div id="snackbar" class="bg-red-600 text-white p-4 rounded-lg shadow-2xl transition-opacity duration-300 opacity-0 transform translate-y-4 max-w-sm pointer-events-auto">
             <div class="flex items-center">
@@ -148,11 +223,19 @@
             </div>
         </div>
     </div>
+
     <script>
+        // --- 1. CONFIGURATION & STATE ---
+        
         let articles = [];
         let isLoading = true;
         let lastBreakingId = null;
         let currentThemeId = 'default-auto'; 
+        
+        // INTERACTIVITY STATE
+        let mousePos = { x: -100, y: -100 }; // Initialize outside screen
+        let snowflakes = []; // Array to store references and state of all snowflake DOM elements
+
         const THEME_MAP = {
             'default-auto': { 
                 name: 'Auto (Time-Based)', 
@@ -163,7 +246,7 @@
                 link: 'text-indigo-600 hover:text-indigo-800',
                 cardClass: 'bg-white',
                 headerClass: 'bg-white',
-                showEffects: (hour) => hour < 5 || hour >= 19,
+                showEffects: (hour) => hour < 5 || hour >= 19, // Night time
             },
             'forest-elegance': {
                 name: 'Forest Elegance',
@@ -199,6 +282,9 @@
                 showEffects: () => false,
             },
         };
+        
+        // --- 2. BGM SETUP (Unchanged from last version) ---
+        
         let BGM_PLAYER = {
             synth: null,
             loop: null,
@@ -218,6 +304,7 @@
                         envelope: { attack: 2, decay: 1, sustain: 0.5, release: 5 }
                     }).toDestination();
                     Tone.Transport.bpm.value = 40;
+                    // Cmaj7 chord loop (C4, E4, G4, B4)
                     player.loop = new Tone.Loop(time => {
                         player.synth.triggerAttackRelease(["C4", "E4", "G4", "B4"], "4n", time);
                     }, "4n");
@@ -235,6 +322,7 @@
                     Tone.Transport.bpm.value = 120;
                     const pattern = ["F3", "A3", "C4", "G3"];
                     let index = 0;
+                    // Simple repeating bass/lead line
                     player.loop = new Tone.Loop(time => {
                         const note = pattern[index % pattern.length];
                         player.synth.triggerAttackRelease(note, "8n", time);
@@ -252,9 +340,10 @@
                         envelope: { attack: 0.01, decay: 0.4, sustain: 0.1, release: 0.5 }
                     }).toDestination();
                     Tone.Transport.bpm.value = 80;
-                    const chordA = ["D3", "F3", "A3"]; 
-                    const chordB = ["A#2", "D3", "F3"]; 
+                    const chordA = ["D3", "F3", "A3"]; // D minor
+                    const chordB = ["A#2", "D3", "F3"]; // B-flat Major (creates dissonance)
                     let index = 0;
+                    // Alternating between two chords every measure
                     player.loop = new Tone.Loop(time => {
                         const chord = index % 2 === 0 ? chordA : chordB;
                         player.synth.triggerAttackRelease(chord, "2n", time, 0.5); 
@@ -263,6 +352,7 @@
                 }
             }
         };
+
         function stopBGM() {
             if (BGM_PLAYER.synth) {
                 BGM_PLAYER.synth.releaseAll();
@@ -277,21 +367,26 @@
             Tone.Transport.stop();
             BGM_PLAYER.isPlaying = false;
         }
+
         async function startBGM(trackId) {
             await Tone.start();
             stopBGM();
+
             if (trackId === 'off') {
                 BGM_PLAYER.currentTrackId = 'off';
                 updateBGMSelectUI();
                 return;
             }
+
             const preset = BGM_PRESETS[trackId];
             if (!preset) return;
+
             try {
                 preset.setup(BGM_PLAYER);
                 BGM_PLAYER.synth.volume.value = preset.volume;
                 BGM_PLAYER.loop.start(0);
                 Tone.Transport.start();
+                
                 BGM_PLAYER.isPlaying = true;
                 BGM_PLAYER.currentTrackId = trackId;
             } catch (error) {
@@ -301,26 +396,28 @@
             }
             updateBGMSelectUI();
         }
+
         function toggleBGMPlayback() {
-             if (BGM_PLAYER.currentTrackId === 'off') {
-                 startBGM('ambient');
-             } else if (BGM_PLAYER.isPlaying) {
-                 stopBGM();
-                 BGM_PLAYER.currentTrackId = document.getElementById('bgm-select').value; 
-                 updateBGMSelectUI();
+             if (BGM_PLAYER.currentTrackId === 'off' || !BGM_PLAYER.isPlaying) {
+                 const trackToPlay = BGM_PLAYER.currentTrackId === 'off' ? 'ambient' : BGM_PLAYER.currentTrackId;
+                 startBGM(trackToPlay);
              } else {
-                 startBGM(BGM_PLAYER.currentTrackId);
+                 stopBGM();
              }
         }
+
         function handleBGMChange(event) {
             const trackId = event.target.value;
             startBGM(trackId);
         }
+
         function updateBGMSelectUI() {
             const selectEl = document.getElementById('bgm-select');
             const toggleBtn = document.getElementById('bgm-master-toggle');
             if (!selectEl || !toggleBtn) return;
+            
             selectEl.value = BGM_PLAYER.currentTrackId;
+
             if (BGM_PLAYER.isPlaying) {
                 toggleBtn.classList.add('bg-green-500', 'hover:bg-green-600', 'text-white');
                 toggleBtn.classList.remove('bg-gray-200', 'hover:bg-gray-300', 'text-gray-700');
@@ -332,6 +429,10 @@
                 toggleBtn.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.636 18.364A9 9 0 015.636 5.636M18 12h-8m-4-4l4 4m-4 0l4-4"/></svg>Music OFF`;
             }
         }
+
+
+        // --- 3. THEME APPLICATION LOGIC ---
+
         function applyTheme(themeId) {
             currentThemeId = themeId;
             const theme = THEME_MAP[themeId];
@@ -341,12 +442,16 @@
             const refreshBtn = document.querySelector('#content button.fixed'); 
             const themeToggleBtn = document.getElementById('theme-toggle-btn');
             const themeOptionsContainer = document.getElementById('theme-options');
+            
+            // 1. Reset all theme classes on elements
             body.className = body.className.split(' ').filter(cls => !Object.values(THEME_MAP).some(t => t.bodyClass.includes(cls))).join(' ');
             appContainer.className = appContainer.className.split(' ').filter(cls => !cls.startsWith('shadow-') && !cls.startsWith('bg-') && !cls.startsWith('border-')).join(' ');
             header.className = header.className.split(' ').filter(cls => !cls.startsWith('bg-') && !cls.startsWith('border-') && !cls.startsWith('text-')).join(' ');
+
+            // 2. Apply dynamic background class for body
+            let skyClass;
+            const hour = new Date().getHours();
             if (themeId === 'default-auto') {
-                const hour = new Date().getHours();
-                let skyClass;
                 if (hour >= 5 && hour < 10) skyClass = 'sunrise-sky';
                 else if (hour >= 10 && hour < 17) skyClass = 'day-sky';
                 else if (hour >= 17 && hour < 19) skyClass = 'sunset-sky';
@@ -355,46 +460,64 @@
             } else {
                 body.classList.add(...theme.bodyClass, 'min-h-screen', 'font-sans', 'relative');
             }
+
+            // 3. Apply common classes to main UI blocks
             appContainer.classList.add('relative', 'z-20', 'max-w-3xl', 'mx-auto', 'shadow-2xl', 'min-h-screen', theme.cardClass, 'rounded-lg');
             header.classList.add('p-6', 'border-b', 'transition-colors', 'duration-500', theme.headerClass);
+
+            // 4. Update Header and Text Colors
             document.getElementById('header-title').className = `text-3xl font-extrabold ${theme.textPrimary}`;
             document.getElementById('header-subtitle').className = `text-sm mt-1 ${theme.textSecondary}`;
+
+            // 5. Update Accents (Buttons, refresh button, theme button)
             if (refreshBtn) {
                 refreshBtn.className = `font-bold py-3 px-6 rounded-full shadow-lg transition duration-300 flex items-center fixed bottom-4 right-4 md:bottom-8 md:right-8 ${theme.accentClass}`;
             }
             themeToggleBtn.className = `fixed top-4 right-4 z-50 p-3 rounded-full shadow-xl transition duration-200 ${theme.accentClass}`;
-            const hour = new Date().getHours();
+
+            // 6. Update Effect Visibility
             const snowContainer = document.getElementById('snow-container');
             if (theme.showEffects(hour)) {
                 snowContainer.classList.remove('effect-hidden');
             } else {
                 snowContainer.classList.add('effect-hidden');
             }
+            
+            // 7. Re-render list to apply new colors to article cards
             renderArticleList();
-            Array.from(themeOptionsContainer.children).forEach(btn => {
-                if (btn.dataset.themeId === themeId) {
-                    btn.classList.add('ring-4', 'ring-offset-2', 'ring-indigo-500');
-                } else {
-                    btn.classList.remove('ring-4', 'ring-offset-2', 'ring-indigo-500');
+            
+            // 8. Highlight selected theme button
+            Array.from(themeOptionsContainer.children).forEach(child => {
+                if (child.dataset.themeId) { 
+                    if (child.dataset.themeId === themeId) {
+                        child.classList.add('ring-4', 'ring-offset-2', 'ring-indigo-500');
+                    } else {
+                        child.classList.remove('ring-4', 'ring-offset-2', 'ring-indigo-500');
+                    }
                 }
             });
             updateBGMSelectUI();
         }
+
         function toggleThemePanel() {
             const panel = document.getElementById('theme-panel');
             panel.classList.toggle('theme-panel-hidden');
         }
+
         function createThemeButtons() {
             const container = document.getElementById('theme-options');
-            container.innerHTML = '';
+            container.innerHTML = ''; 
+
             Object.keys(THEME_MAP).forEach(themeId => {
                 const theme = THEME_MAP[themeId];
                 const button = document.createElement('button');
+                
                 let previewClass;
                 if (themeId === 'default-auto') previewClass = 'bg-indigo-600';
                 else if (themeId === 'forest-elegance') previewClass = 'bg-green-700';
                 else if (themeId === 'warm-sepia') previewClass = 'bg-amber-800';
                 else if (themeId === 'high-contrast') previewClass = 'bg-black border border-cyan-400';
+
                 button.dataset.themeId = themeId;
                 button.className = `w-full p-3 rounded-lg text-left shadow-md transition duration-200 flex items-center space-x-3 
                                     ${currentThemeId === themeId ? 'ring-4 ring-offset-2 ring-indigo-500' : 'hover:shadow-lg hover:ring-2'}`;
@@ -407,15 +530,13 @@
                 };
                 container.appendChild(button);
             });
+            
             const bgmDiv = document.createElement('div');
+            bgmDiv.dataset.bgm = true;
             bgmDiv.className = 'pt-4 border-t border-gray-200 mt-4';
             bgmDiv.innerHTML = `
                 <h3 class="font-semibold text-gray-700 mb-2">Ambient Background Music</h3>
-                <!-- Music Toggle Button -->
-                <button id="bgm-master-toggle" onclick="toggleBGMPlayback()" class="w-full py-2 px-3 rounded-lg flex items-center justify-center text-sm font-bold transition duration-200 mb-3">
-                    <!-- Initial state set by updateBGMSelectUI -->
-                </button>
-                <!-- Music Track Selection -->
+                <button id="bgm-master-toggle" onclick="toggleBGMPlayback()" class="w-full py-2 px-3 rounded-lg flex items-center justify-center text-sm font-bold transition duration-200 mb-3"></button>
                 <select id="bgm-select" onchange="handleBGMChange(event)" class="w-full p-2 border border-gray-300 rounded-lg text-gray-800">
                     ${Object.keys(BGM_PRESETS).map(id => 
                         `<option value="${id}">${BGM_PRESETS[id].name} - ${BGM_PRESETS[id].description}</option>`
@@ -423,8 +544,11 @@
                 </select>
             `;
             container.appendChild(bgmDiv);
-            updateBGMSelectUI();
-        }        
+            updateBGMSelectUI(); 
+        }
+        
+        // --- 4. DATA AND MOCK SERVICE (Unchanged) ---
+        
         function createArticle(isBreaking = false) {
             const sources = ['TechCrunch', 'CNN', 'BBC', 'The Verge', 'Bloomberg'];
             const topics = [
@@ -435,6 +559,7 @@
             const randomTopic = topics[Math.floor(Math.random() * topics.length)];
             const publishedAt = new Date();
             const seed = Math.floor(Math.random() * 10000);
+
             return {
                 id: publishedAt.getTime().toString() + seed,
                 title: `${randomTopic}: Market Reaction and Expert Analysis`,
@@ -446,14 +571,16 @@
                 isBreaking: isBreaking,
             };
         }
+
         function fetchInitialHeadlines() {
             return new Promise(resolve => {
                 setTimeout(() => {
-                    const initialArticles = Array.from({ length: 10 }, () => createArticle());
+                    const initialArticles = Array.from({ length: 20 }, () => createArticle());
                     resolve(initialArticles);
                 }, 2000); 
             });
         }
+
         function startLiveFeed() {
             setInterval(() => {
                 const isBreaking = Math.random() < 0.3; 
@@ -463,29 +590,39 @@
                 if (isBreaking) {
                     showBreakingNewsSnackbar(newArticle);
                 }
-            }, 15000); 
+            }, 10000); 
         }
+
         function showBreakingNewsSnackbar(article) {
             if (article.id === lastBreakingId) return;
-            lastBreakingId = article.id; 
+            lastBreakingId = article.id;
+            
             const snackbar = document.getElementById('snackbar');
             const titleEl = document.getElementById('snackbar-title');
             const appContainer = document.getElementById('app-container');
+
             titleEl.textContent = article.title;
+            
             appContainer.classList.add('mood-effect-active');
+
             snackbar.classList.remove('opacity-0', 'translate-y-4');
             snackbar.classList.add('opacity-100', 'translate-y-0');
+
             setTimeout(() => {
                 appContainer.classList.remove('mood-effect-active');
                 snackbar.classList.remove('opacity-100', 'translate-y-0');
                 snackbar.classList.add('opacity-0', 'translate-y-4');
             }, 5000);
         }
+
+        // --- 5. UI RENDERING FUNCTIONS (Unchanged) ---
+
         function formatDate(date) {
             const now = new Date();
             const diff = now - date;
             const minutes = Math.floor(diff / (1000 * 60));
             const hours = Math.floor(diff / (1000 * 60 * 60));
+
             if (minutes < 60) {
                 return `${minutes}m ago`;
             } else if (hours < 24) {
@@ -494,6 +631,7 @@
                 return `${date.getMonth() + 1}/${date.getDate()} • ${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
             }
         }
+        
         function renderLoading() {
             const theme = THEME_MAP[currentThemeId];
             document.getElementById('content').innerHTML = `
@@ -503,17 +641,21 @@
                 </div>
             `;
         }
+
         function renderArticleCard(article) {
-            const theme = THEME_MAP[currentThemeId];   
+            const theme = THEME_MAP[currentThemeId];
+            
             const cardClasses = article.isBreaking 
                 ? 'border-2 border-red-500 ring-4 ring-red-200 shadow-2xl' 
                 : 'shadow-md'; 
+
             const breakingTag = article.isBreaking 
                 ? `<div class="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold py-1 px-3 rounded-full shadow-lg flex items-center live-badge-pulse">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     LIVE PHOTO
                   </div>`
                 : '';
+
             return `
                 <div class="${theme.cardClass} rounded-xl overflow-hidden mb-6 hover:shadow-xl transition duration-300 transform hover:scale-[1.01] ${cardClasses}">
                     <div class="cursor-pointer" onclick="renderDetailPage('${article.id}')">
@@ -533,10 +675,13 @@
                 </div>
             `;
         }
+
         function renderArticleList() {
             const contentDiv = document.getElementById('content');
             const theme = THEME_MAP[currentThemeId];
+            
             let html = articles.map(renderArticleCard).join('');
+
             html += `
                 <div class="fixed bottom-4 right-4 md:bottom-8 md:right-8">
                     <button onclick="refreshData()" class="font-bold py-3 px-6 rounded-full shadow-lg transition duration-300 flex items-center ${theme.accentClass} fixed bottom-4 right-4 md:bottom-8 md:right-8">
@@ -545,27 +690,36 @@
                     </button>
                 </div>
             `;
+            
             contentDiv.innerHTML = html;
         }
+
         function renderDetailPage(articleId) {
             const article = articles.find(a => a.id === articleId);
             if (!article) return;
+            
             const theme = THEME_MAP[currentThemeId];
             const contentDiv = document.getElementById('content');
+            
             const detailHtml = `
                 <div class="pb-16">
                     <button onclick="renderArticleList()" class="${theme.link} flex items-center mb-6">
                         <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                         Back to Feed
                     </button>
+                    
                     <img class="w-full h-64 object-cover rounded-xl shadow-lg mb-6" src="${article.imageUrl}" alt="${article.title}" onerror="this.onerror=null;this.src='https://placehold.co/400x200/cccccc/333333?text=Image+Unavailable';">
+
                     ${article.isBreaking ? '<span class="inline-block bg-red-100 text-red-600 text-xs font-semibold px-3 py-1 rounded-full mb-4">BREAKING NEWS</span>' : ''}
+
                     <h1 class="text-4xl font-extrabold mb-4 ${theme.textPrimary}">${article.title}</h1>
+                    
                     <div class="flex items-center text-sm mb-8 ${theme.textSecondary}">
                         <span class="mr-4">By <span class="font-semibold ${theme.textPrimary}">${article.author}</span></span>
                         <span class="mr-4">• ${article.source}</span>
                         <span>• ${formatDate(article.publishedAt)}</span>
                     </div>
+
                     <div class="text-lg leading-relaxed space-y-6 ${theme.textPrimary}">
                         <p>${article.summary} ${article.summary}</p>
                         <p>A detailed follow-up on the situation reveals new information. Experts suggest the rapid change in the market is unprecedented, and cautionary measures are being advised across the board. The regulatory bodies are expected to release a statement later today regarding the implications of this event on future policy. This is the main body of the article, providing in-depth analysis and quotes from key stakeholders. (Simulated long-form content)</p>
@@ -575,15 +729,65 @@
             `;
             contentDiv.innerHTML = detailHtml;
         }
+
         async function refreshData() {
             renderLoading();
             articles = await fetchInitialHeadlines();
             renderArticleList();
         }
+
+        // --- 6. BACKGROUND EFFECT LOGIC (Interactive Snow) ---
+
+        /**
+         * Creates a temporary burst of glitter particles at a given position.
+         * @param {number} x - Viewport X coordinate.
+         * @param {number} y - Viewport Y coordinate.
+         */
+        function createGlitterBurst(x, y) {
+            const effectContainer = document.getElementById('snow-container');
+            const burstCount = 10;
+            const colors = ['#ffffff', '#eeeeee', '#c6e2ff', '#a4c2f4']; // White and light blue/silver tones
+
+            for (let i = 0; i < burstCount; i++) {
+                const el = document.createElement('div');
+                el.classList.add('glitter-particle');
+                
+                const size = Math.random() * 2 + 1; // 1px to 3px
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Randomize trajectory (small displacement)
+                const endX = (Math.random() - 0.5) * 50; // -25 to 25
+                const endY = (Math.random() - 0.5) * 50; // -25 to 25
+
+                el.style.width = `${size}px`;
+                el.style.height = `${size}px`;
+                el.style.backgroundColor = color;
+                el.style.left = `${x}px`;
+                el.style.top = `${y}px`;
+                el.style.setProperty('--end-x', `${endX}px`);
+                el.style.setProperty('--end-y', `${endY}px`);
+
+                effectContainer.appendChild(el);
+
+                // Remove particle after animation ends
+                setTimeout(() => {
+                    el.remove();
+                }, 1500);
+            }
+        }
+        
+        /**
+         * Initializes and stores star and snowflake elements.
+         */
         function createBackgroundEffects() {
             const effectContainer = document.getElementById('snow-container');
+            effectContainer.innerHTML = ''; // Clear existing effects
+            snowflakes = []; // Reset the snowflake array
+            
             const numberOfStars = 50; 
-            const numberOfSnowflakes = 50; 
+            const numberOfSnowflakes = 80; 
+
+            // Create stars
             for (let i = 0; i < numberOfStars; i++) {
                 const el = document.createElement('div');
                 el.classList.add('star');
@@ -598,29 +802,156 @@
                 el.style.animationDelay = `-${delay}s`;
                 effectContainer.appendChild(el);
             }
+
+            // Create snowflakes
             for (let i = 0; i < numberOfSnowflakes; i++) {
                 const el = document.createElement('div');
                 el.classList.add('snowflake');
                 const size = Math.random() * 3 + 2; 
                 el.style.width = `${size}px`;
                 el.style.height = `${size}px`;
-                el.style.left = `${Math.random() * 100}vw`;
-                const duration = Math.random() * 10 + 10;
-                const delay = Math.random() * 10;
-                el.style.animationDuration = `${duration}s`;
-                el.style.animationDelay = `-${delay}s`;
+                el.style.animationDuration = `${Math.random() * 10 + 10}s`;
+                el.style.animationDelay = `-${Math.random() * 10}s`;
+                
+                // Set initial random position for the JS-controlled fall (optional, but ensures they are not all clumped)
+                const initialX = Math.random() * window.innerWidth;
+                const initialY = Math.random() * window.innerHeight;
+                
+                // Store initial data for physics simulation
+                const snowflakeData = {
+                    el: el,
+                    x: initialX,
+                    y: initialY,
+                    vx: 0, // Velocity X
+                    vy: 0, // Velocity Y (will be calculated later)
+                    size: size
+                };
+
+                el.style.left = `${initialX}px`;
+                el.style.top = `${initialY}px`;
+                
+                // Crucial: Start the CSS animation immediately. We pause it later if interacting.
+                el.style.animationPlayState = 'running'; 
+
+                snowflakes.push(snowflakeData);
                 effectContainer.appendChild(el);
             }
         }
+
+        /**
+         * Main animation loop for interactive snow.
+         */
+        function animateInteractiveSnow() {
+            if (document.getElementById('snow-container').classList.contains('effect-hidden')) {
+                // Do nothing if effects are hidden
+                requestAnimationFrame(animateInteractiveSnow);
+                return;
+            }
+
+            const repulsionRadius = 60; // Distance in pixels to start repulsion
+            const repulsionStrength = 0.5; // Strength of the push
+            const maxVelocity = 5; // Max speed for a snowflake
+
+            snowflakes.forEach(flake => {
+                // Get the center position of the snowflake
+                const flakeX = flake.x + flake.size / 2;
+                const flakeY = flake.y + flake.size / 2;
+
+                // Calculate distance to mouse position
+                const dx = flakeX - mousePos.x;
+                const dy = flakeY - mousePos.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                let isInteracting = false;
+
+                if (distance < repulsionRadius) {
+                    isInteracting = true;
+                    // Calculate normalized repulsion vector
+                    const force = (repulsionRadius - distance) / repulsionRadius * repulsionStrength;
+                    const normX = dx / distance;
+                    const normY = dy / distance;
+
+                    // Apply force to velocity, capped at maxVelocity
+                    flake.vx = Math.min(Math.max(flake.vx + normX * force, -maxVelocity), maxVelocity);
+                    flake.vy = Math.min(Math.max(flake.vy + normY * force, -maxVelocity), maxVelocity);
+                } else {
+                    // Apply drag/decay to return to normal
+                    flake.vx *= 0.95; 
+                    flake.vy *= 0.95;
+                }
+
+                // Update position based on JS velocity
+                flake.x += flake.vx;
+                flake.y += flake.vy;
+
+                // Apply new position and state
+                flake.el.style.left = `${flake.x}px`;
+                flake.el.style.top = `${flake.y}px`;
+
+                // Toggle animation pause based on interaction
+                if (isInteracting) {
+                    flake.el.classList.add('snowflake-interact');
+                } else {
+                    flake.el.classList.remove('snowflake-interact');
+                    // Reset position when the CSS animation takes over again
+                    // Flake position reset logic is complex due to mixed CSS/JS control, 
+                    // but the CSS 'snowfall' keyframe handles the continuous down-drift when JS is inactive.
+                }
+
+                // Screen wrapping for persistent snow effect
+                if (flake.x < -10) flake.x = window.innerWidth + 10;
+                if (flake.x > window.innerWidth + 10) flake.x = -10;
+                // If it falls off the bottom, wrap to the top
+                if (flake.y > window.innerHeight + 10) {
+                    flake.y = -10;
+                    flake.x = Math.random() * window.innerWidth; // new random X
+                    flake.vy = 0;
+                    flake.vx = 0;
+                }
+            });
+
+            requestAnimationFrame(animateInteractiveSnow);
+        }
+
+        // --- 7. EVENT LISTENERS & INITIALIZATION ---
+
+        function handlePointerMove(event) {
+            // Get position based on whether it's a mouse or touch event
+            const clientX = event.touches ? event.touches[0].clientX : event.clientX;
+            const clientY = event.touches ? event.touches[0].clientY : event.clientY;
+            mousePos = { x: clientX, y: clientY };
+        }
+
+        function handlePointerClick(event) {
+            // Glitter burst on click/tap
+            const clientX = event.touches ? event.touches[0].clientX : event.clientX;
+            const clientY = event.touches ? event.touches[0].clientY : event.clientY;
+            createGlitterBurst(clientX, clientY);
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
             createBackgroundEffects(); 
             createThemeButtons(); 
+            
+            // Set up interactivity handlers
+            document.addEventListener('mousemove', handlePointerMove);
+            document.addEventListener('touchstart', handlePointerMove);
+            document.addEventListener('touchmove', handlePointerMove);
+            document.addEventListener('click', handlePointerClick);
+            document.addEventListener('touchend', handlePointerMove); // Reset mousePos on touch end
+
+            // Start the interactive snow loop
+            animateInteractiveSnow();
+
+            // Initial theme application
             applyTheme('default-auto'); 
+
             setInterval(() => {
                 if (currentThemeId === 'default-auto') {
                     applyTheme('default-auto');
                 }
             }, 300000); 
+
             renderLoading();
             articles = await fetchInitialHeadlines();
             isLoading = false;
