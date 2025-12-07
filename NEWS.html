@@ -517,7 +517,6 @@
                 return `${date.getMonth() + 1}/${date.getDate()} • ${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
             }
         }
-        
         function renderLoading() {
             const theme = THEME_MAP[currentThemeId];
             document.getElementById('content').innerHTML = `
@@ -527,21 +526,17 @@
                 </div>
             `;
         }
-
         function renderArticleCard(article) {
-            const theme = THEME_MAP[currentThemeId];
-            
+            const theme = THEME_MAP[currentThemeId];    
             const cardClasses = article.isBreaking 
                 ? 'border-2 border-red-500 ring-4 ring-red-200 shadow-2xl' 
                 : 'shadow-md'; 
-
             const breakingTag = article.isBreaking 
                 ? `<div class="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold py-1 px-3 rounded-full shadow-lg flex items-center live-badge-pulse">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     LIVE PHOTO
                   </div>`
                 : '';
-
             return `
                 <div class="${theme.cardClass} rounded-xl overflow-hidden mb-6 hover:shadow-xl transition duration-300 transform hover:scale-[1.01] ${cardClasses}">
                     <div class="cursor-pointer" onclick="renderDetailPage('${article.id}')">
@@ -561,13 +556,10 @@
                 </div>
             `;
         }
-
         function renderArticleList() {
             const contentDiv = document.getElementById('content');
             const theme = THEME_MAP[currentThemeId];
-            
             let html = articles.map(renderArticleCard).join('');
-
             html += `
                 <div class="fixed bottom-4 right-4 md:bottom-8 md:right-8">
                     <button onclick="refreshData()" class="font-bold py-3 px-6 rounded-full shadow-lg transition duration-300 flex items-center ${theme.accentClass} fixed bottom-4 right-4 md:bottom-8 md:right-8">
@@ -576,36 +568,27 @@
                     </button>
                 </div>
             `;
-            
             contentDiv.innerHTML = html;
         }
-
         function renderDetailPage(articleId) {
             const article = articles.find(a => a.id === articleId);
             if (!article) return;
-            
             const theme = THEME_MAP[currentThemeId];
             const contentDiv = document.getElementById('content');
-            
             const detailHtml = `
                 <div class="pb-16">
                     <button onclick="renderArticleList()" class="${theme.link} flex items-center mb-6">
                         <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                         Back to Feed
-                    </button>
-                    
+                    </button>     
                     <img class="w-full h-64 object-cover rounded-xl shadow-lg mb-6" src="${article.imageUrl}" alt="${article.title}" onerror="this.onerror=null;this.src='https://placehold.co/400x200/cccccc/333333?text=Image+Unavailable';">
-
                     ${article.isBreaking ? '<span class="inline-block bg-red-100 text-red-600 text-xs font-semibold px-3 py-1 rounded-full mb-4">BREAKING NEWS</span>' : ''}
-
                     <h1 class="text-4xl font-extrabold mb-4 ${theme.textPrimary}">${article.title}</h1>
-                    
                     <div class="flex items-center text-sm mb-8 ${theme.textSecondary}">
                         <span class="mr-4">By <span class="font-semibold ${theme.textPrimary}">${article.author}</span></span>
                         <span class="mr-4">• ${article.source}</span>
                         <span>• ${formatDate(article.publishedAt)}</span>
                     </div>
-
                     <div class="text-lg leading-relaxed space-y-6 ${theme.textPrimary}">
                         <p>${article.summary} ${article.summary}</p>
                         <p>A detailed follow-up on the situation reveals new information. Experts suggest the rapid change in the market is unprecedented, and cautionary measures are being advised across the board. The regulatory bodies are expected to release a statement later today regarding the implications of this event on future policy. This is the main body of the article, providing in-depth analysis and quotes from key stakeholders. (Simulated long-form content)</p>
@@ -847,6 +830,7 @@
     </script>
 </body>
 </html>
+
 
 
 
