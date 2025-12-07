@@ -598,36 +598,22 @@
             `;
             contentDiv.innerHTML = detailHtml;
         }
-
         async function refreshData() {
             renderLoading();
             articles = await fetchInitialHeadlines();
             renderArticleList();
         }
-
-        // --- 6. BACKGROUND EFFECT LOGIC (Interactive Snow) ---
-
-        /**
-         * Creates a temporary burst of glitter particles at a given position.
-         * @param {number} x - Viewport X coordinate.
-         * @param {number} y - Viewport Y coordinate.
-         */
         function createGlitterBurst(x, y) {
             const effectContainer = document.getElementById('snow-container');
             const burstCount = 10;
-            const colors = ['#ffffff', '#eeeeee', '#c6e2ff', '#a4c2f4']; // White and light blue/silver tones
-
+            const colors = ['#ffffff', '#eeeeee', '#c6e2ff', '#a4c2f4']; 
             for (let i = 0; i < burstCount; i++) {
                 const el = document.createElement('div');
                 el.classList.add('glitter-particle');
-                
-                const size = Math.random() * 2 + 1; // 1px to 3px
+                const size = Math.random() * 2 + 1; 
                 const color = colors[Math.floor(Math.random() * colors.length)];
-                
-                // Randomize trajectory (small displacement)
-                const endX = (Math.random() - 0.5) * 50; // -25 to 25
-                const endY = (Math.random() - 0.5) * 50; // -25 to 25
-
+                const endX = (Math.random() - 0.5) * 50; 
+                const endY = (Math.random() - 0.5) * 50;
                 el.style.width = `${size}px`;
                 el.style.height = `${size}px`;
                 el.style.backgroundColor = color;
@@ -635,24 +621,16 @@
                 el.style.top = `${y}px`;
                 el.style.setProperty('--end-x', `${endX}px`);
                 el.style.setProperty('--end-y', `${endY}px`);
-
                 effectContainer.appendChild(el);
-
-                // Remove particle after animation ends
                 setTimeout(() => {
                     el.remove();
                 }, 1500);
             }
         }
-        
-        /**
-         * Initializes and stores star and snowflake elements.
-         */
         function createBackgroundEffects() {
             const effectContainer = document.getElementById('snow-container');
-            effectContainer.innerHTML = ''; // Clear existing effects
-            snowflakes = []; // Reset the snowflake array
-            
+            effectContainer.innerHTML = ''; 
+            snowflakes = []; 
             const numberOfStars = 50; 
             const numberOfSnowflakes = 80; 
 
@@ -830,6 +808,7 @@
     </script>
 </body>
 </html>
+
 
 
 
