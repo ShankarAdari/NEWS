@@ -76,23 +76,17 @@
             transform: scale(0.99); 
             filter: brightness(0.9) saturate(1.1); 
         }
-        
-        /* --- Background Effects (Fixed Positioning for full coverage) --- */
-
         #snow-container {
             position: fixed; 
             inset: 0;
             z-index: 10;
-            /* Allows mouse events to pass through, crucial for interacting with elements below */
             pointer-events: none; 
             overflow: hidden;
             height: 100vh;
         }
-
         @keyframes snowfall {
             0% { transform: translateY(-10%) translateX(0); opacity: 0.8; }
             50% { opacity: 1; }
-            /* Snow falls beyond the viewport height */
             100% { transform: translateY(105vh) translateX(5vw); opacity: 0.5; } 
         }
         .snowflake {
@@ -104,15 +98,11 @@
             animation-name: snowfall;
             animation-timing-function: linear;
             animation-iteration-count: infinite;
-            /* Added transition for smooth repulsion effect */
             transition: opacity 0.3s ease, transform 0.3s ease-out; 
         }
         .snowflake-interact {
-             /* When a snowflake is manually positioned by JS, its CSS animation is paused */
             animation-play-state: paused !important;
         }
-        
-        /* GLITTER BURST EFFECT */
         @keyframes fade-out-burst {
             0% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.8; }
@@ -941,6 +931,7 @@
     </script>
 </body>
 </html>
+
 
 
 
