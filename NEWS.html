@@ -633,8 +633,6 @@
             snowflakes = []; 
             const numberOfStars = 50; 
             const numberOfSnowflakes = 80; 
-
-            // Create stars
             for (let i = 0; i < numberOfStars; i++) {
                 const el = document.createElement('div');
                 el.classList.add('star');
@@ -649,8 +647,6 @@
                 el.style.animationDelay = `-${delay}s`;
                 effectContainer.appendChild(el);
             }
-
-            // Create snowflakes
             for (let i = 0; i < numberOfSnowflakes; i++) {
                 const el = document.createElement('div');
                 el.classList.add('snowflake');
@@ -659,8 +655,6 @@
                 el.style.height = `${size}px`;
                 el.style.animationDuration = `${Math.random() * 10 + 10}s`;
                 el.style.animationDelay = `-${Math.random() * 10}s`;
-                
-                // Set initial random position for the JS-controlled fall (optional, but ensures they are not all clumped)
                 const initialX = Math.random() * window.innerWidth;
                 const initialY = Math.random() * window.innerHeight;
                 
@@ -808,6 +802,7 @@
     </script>
 </body>
 </html>
+
 
 
 
