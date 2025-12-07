@@ -394,8 +394,6 @@
                 snowContainer.classList.add('effect-hidden');
             }
             renderArticleList();
-            
-            // 8. Highlight selected theme button
             Array.from(themeOptionsContainer.children).forEach(child => {
                 if (child.dataset.themeId) { 
                     if (child.dataset.themeId === themeId) {
@@ -407,26 +405,21 @@
             });
             updateBGMSelectUI();
         }
-
         function toggleThemePanel() {
             const panel = document.getElementById('theme-panel');
             panel.classList.toggle('theme-panel-hidden');
         }
-
         function createThemeButtons() {
             const container = document.getElementById('theme-options');
             container.innerHTML = ''; 
-
             Object.keys(THEME_MAP).forEach(themeId => {
                 const theme = THEME_MAP[themeId];
                 const button = document.createElement('button');
-                
                 let previewClass;
                 if (themeId === 'default-auto') previewClass = 'bg-indigo-600';
                 else if (themeId === 'forest-elegance') previewClass = 'bg-green-700';
                 else if (themeId === 'warm-sepia') previewClass = 'bg-amber-800';
                 else if (themeId === 'high-contrast') previewClass = 'bg-black border border-cyan-400';
-
                 button.dataset.themeId = themeId;
                 button.className = `w-full p-3 rounded-lg text-left shadow-md transition duration-200 flex items-center space-x-3 
                                     ${currentThemeId === themeId ? 'ring-4 ring-offset-2 ring-indigo-500' : 'hover:shadow-lg hover:ring-2'}`;
@@ -439,7 +432,6 @@
                 };
                 container.appendChild(button);
             });
-            
             const bgmDiv = document.createElement('div');
             bgmDiv.dataset.bgm = true;
             bgmDiv.className = 'pt-4 border-t border-gray-200 mt-4';
@@ -455,9 +447,6 @@
             container.appendChild(bgmDiv);
             updateBGMSelectUI(); 
         }
-        
-        // --- 4. DATA AND MOCK SERVICE (Unchanged) ---
-        
         function createArticle(isBreaking = false) {
             const sources = ['TechCrunch', 'CNN', 'BBC', 'The Verge', 'Bloomberg'];
             const topics = [
@@ -468,7 +457,6 @@
             const randomTopic = topics[Math.floor(Math.random() * topics.length)];
             const publishedAt = new Date();
             const seed = Math.floor(Math.random() * 10000);
-
             return {
                 id: publishedAt.getTime().toString() + seed,
                 title: `${randomTopic}: Market Reaction and Expert Analysis`,
@@ -480,7 +468,6 @@
                 isBreaking: isBreaking,
             };
         }
-
         function fetchInitialHeadlines() {
             return new Promise(resolve => {
                 setTimeout(() => {
@@ -489,7 +476,6 @@
                 }, 2000); 
             });
         }
-
         function startLiveFeed() {
             setInterval(() => {
                 const isBreaking = Math.random() < 0.3; 
@@ -501,31 +487,22 @@
                 }
             }, 10000); 
         }
-
         function showBreakingNewsSnackbar(article) {
             if (article.id === lastBreakingId) return;
             lastBreakingId = article.id;
-            
             const snackbar = document.getElementById('snackbar');
             const titleEl = document.getElementById('snackbar-title');
             const appContainer = document.getElementById('app-container');
-
             titleEl.textContent = article.title;
-            
             appContainer.classList.add('mood-effect-active');
-
             snackbar.classList.remove('opacity-0', 'translate-y-4');
             snackbar.classList.add('opacity-100', 'translate-y-0');
-
             setTimeout(() => {
                 appContainer.classList.remove('mood-effect-active');
                 snackbar.classList.remove('opacity-100', 'translate-y-0');
                 snackbar.classList.add('opacity-0', 'translate-y-4');
             }, 5000);
         }
-
-        // --- 5. UI RENDERING FUNCTIONS (Unchanged) ---
-
         function formatDate(date) {
             const now = new Date();
             const diff = now - date;
@@ -870,6 +847,7 @@
     </script>
 </body>
 </html>
+
 
 
 
