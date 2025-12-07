@@ -674,52 +674,34 @@
         }
         function animateInteractiveSnow() {
             if (document.getElementById('snow-container').classList.contains('effect-hidden')) {
-                // Do nothing if effects are hidden
                 requestAnimationFrame(animateInteractiveSnow);
                 return;
             }
-
-            const repulsionRadius = 60; // Distance in pixels to start repulsion
-            const repulsionStrength = 0.5; // Strength of the push
-            const maxVelocity = 5; // Max speed for a snowflake
-
+            const repulsionRadius = 60; 
+            const repulsionStrength = 0.5; 
+            const maxVelocity = 5;
             snowflakes.forEach(flake => {
-                // Get the center position of the snowflake
                 const flakeX = flake.x + flake.size / 2;
                 const flakeY = flake.y + flake.size / 2;
-
-                // Calculate distance to mouse position
                 const dx = flakeX - mousePos.x;
                 const dy = flakeY - mousePos.y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
-
                 let isInteracting = false;
-
                 if (distance < repulsionRadius) {
                     isInteracting = true;
-                    // Calculate normalized repulsion vector
                     const force = (repulsionRadius - distance) / repulsionRadius * repulsionStrength;
                     const normX = dx / distance;
                     const normY = dy / distance;
-
-                    // Apply force to velocity, capped at maxVelocity
                     flake.vx = Math.min(Math.max(flake.vx + normX * force, -maxVelocity), maxVelocity);
                     flake.vy = Math.min(Math.max(flake.vy + normY * force, -maxVelocity), maxVelocity);
                 } else {
-                    // Apply drag/decay to return to normal
                     flake.vx *= 0.95; 
                     flake.vy *= 0.95;
                 }
-
-                // Update position based on JS velocity
                 flake.x += flake.vx;
                 flake.y += flake.vy;
-
-                // Apply new position and state
                 flake.el.style.left = `${flake.x}px`;
                 flake.el.style.top = `${flake.y}px`;
-
-                // Toggle animation pause based on interaction
                 if (isInteracting) {
                     flake.el.classList.add('snowflake-interact');
                 } else {
@@ -792,6 +774,7 @@
     </script>
 </body>
 </html>
+
 
 
 
