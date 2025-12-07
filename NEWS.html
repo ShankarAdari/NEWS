@@ -158,21 +158,13 @@
             Close
         </button>
     </div>
-
-    <!-- Main Application Container (z-20 to be above effects) -->
     <div id="app-container" class="relative z-20 max-w-3xl mx-auto shadow-2xl bg-white min-h-screen transition-colors duration-500 rounded-lg">
-        
-        <!-- Header -->
         <header id="app-header" class="p-6 border-b border-gray-200 transition-colors duration-500">
             <h1 class="text-3xl font-extrabold text-gray-900" id="header-title">Live Feed Dashboard</h1>
             <p class="text-sm text-gray-500 mt-1" id="header-subtitle">Real-time headlines delivered right now.</p>
         </header>
-
-        <!-- Dynamic Content Area -->
         <main id="content" class="p-6"></main>
     </div>
-
-    <!-- Breaking News SnackBar Placeholder -->
     <div id="snackbar-container" class="fixed bottom-4 w-full flex justify-center z-50 pointer-events-none">
         <div id="snackbar" class="bg-red-600 text-white p-4 rounded-lg shadow-2xl transition-opacity duration-300 opacity-0 transform translate-y-4 max-w-sm pointer-events-auto">
             <div class="flex items-center">
@@ -182,19 +174,13 @@
             </div>
         </div>
     </div>
-
     <script>
-        // --- 1. CONFIGURATION & STATE ---
-        
         let articles = [];
         let isLoading = true;
         let lastBreakingId = null;
         let currentThemeId = 'default-auto'; 
-        
-        // INTERACTIVITY STATE
-        let mousePos = { x: -100, y: -100 }; // Initialize outside screen
-        let snowflakes = []; // Array to store references and state of all snowflake DOM elements
-
+        let mousePos = { x: -100, y: -100 }; 
+        let snowflakes = []; 
         const THEME_MAP = {
             'default-auto': { 
                 name: 'Auto (Time-Based)', 
@@ -205,7 +191,7 @@
                 link: 'text-indigo-600 hover:text-indigo-800',
                 cardClass: 'bg-white',
                 headerClass: 'bg-white',
-                showEffects: (hour) => hour < 5 || hour >= 19, // Night time
+                showEffects: (hour) => hour < 5 || hour >= 19, 
             },
             'forest-elegance': {
                 name: 'Forest Elegance',
@@ -241,16 +227,12 @@
                 showEffects: () => false,
             },
         };
-        
-        // --- 2. BGM SETUP (Unchanged from last version) ---
-        
         let BGM_PLAYER = {
             synth: null,
             loop: null,
             isPlaying: false,
             currentTrackId: 'off'
         };
-
         const BGM_PRESETS = {
             'off': { name: 'Off', description: 'No music' },
             'ambient': {
@@ -263,7 +245,6 @@
                         envelope: { attack: 2, decay: 1, sustain: 0.5, release: 5 }
                     }).toDestination();
                     Tone.Transport.bpm.value = 40;
-                    // Cmaj7 chord loop (C4, E4, G4, B4)
                     player.loop = new Tone.Loop(time => {
                         player.synth.triggerAttackRelease(["C4", "E4", "G4", "B4"], "4n", time);
                     }, "4n");
@@ -281,7 +262,6 @@
                     Tone.Transport.bpm.value = 120;
                     const pattern = ["F3", "A3", "C4", "G3"];
                     let index = 0;
-                    // Simple repeating bass/lead line
                     player.loop = new Tone.Loop(time => {
                         const note = pattern[index % pattern.length];
                         player.synth.triggerAttackRelease(note, "8n", time);
@@ -299,10 +279,9 @@
                         envelope: { attack: 0.01, decay: 0.4, sustain: 0.1, release: 0.5 }
                     }).toDestination();
                     Tone.Transport.bpm.value = 80;
-                    const chordA = ["D3", "F3", "A3"]; // D minor
-                    const chordB = ["A#2", "D3", "F3"]; // B-flat Major (creates dissonance)
+                    const chordA = ["D3", "F3", "A3"]; 
+                    const chordB = ["A#2", "D3", "F3"]; 
                     let index = 0;
-                    // Alternating between two chords every measure
                     player.loop = new Tone.Loop(time => {
                         const chord = index % 2 === 0 ? chordA : chordB;
                         player.synth.triggerAttackRelease(chord, "2n", time, 0.5); 
@@ -311,7 +290,6 @@
                 }
             }
         };
-
         function stopBGM() {
             if (BGM_PLAYER.synth) {
                 BGM_PLAYER.synth.releaseAll();
@@ -326,26 +304,21 @@
             Tone.Transport.stop();
             BGM_PLAYER.isPlaying = false;
         }
-
         async function startBGM(trackId) {
             await Tone.start();
             stopBGM();
-
             if (trackId === 'off') {
                 BGM_PLAYER.currentTrackId = 'off';
                 updateBGMSelectUI();
                 return;
             }
-
             const preset = BGM_PRESETS[trackId];
             if (!preset) return;
-
             try {
                 preset.setup(BGM_PLAYER);
                 BGM_PLAYER.synth.volume.value = preset.volume;
                 BGM_PLAYER.loop.start(0);
                 Tone.Transport.start();
-                
                 BGM_PLAYER.isPlaying = true;
                 BGM_PLAYER.currentTrackId = trackId;
             } catch (error) {
@@ -355,7 +328,6 @@
             }
             updateBGMSelectUI();
         }
-
         function toggleBGMPlayback() {
              if (BGM_PLAYER.currentTrackId === 'off' || !BGM_PLAYER.isPlaying) {
                  const trackToPlay = BGM_PLAYER.currentTrackId === 'off' ? 'ambient' : BGM_PLAYER.currentTrackId;
@@ -364,19 +336,15 @@
                  stopBGM();
              }
         }
-
         function handleBGMChange(event) {
             const trackId = event.target.value;
             startBGM(trackId);
         }
-
         function updateBGMSelectUI() {
             const selectEl = document.getElementById('bgm-select');
             const toggleBtn = document.getElementById('bgm-master-toggle');
             if (!selectEl || !toggleBtn) return;
-            
             selectEl.value = BGM_PLAYER.currentTrackId;
-
             if (BGM_PLAYER.isPlaying) {
                 toggleBtn.classList.add('bg-green-500', 'hover:bg-green-600', 'text-white');
                 toggleBtn.classList.remove('bg-gray-200', 'hover:bg-gray-300', 'text-gray-700');
@@ -388,10 +356,6 @@
                 toggleBtn.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.636 18.364A9 9 0 015.636 5.636M18 12h-8m-4-4l4 4m-4 0l4-4"/></svg>Music OFF`;
             }
         }
-
-
-        // --- 3. THEME APPLICATION LOGIC ---
-
         function applyTheme(themeId) {
             currentThemeId = themeId;
             const theme = THEME_MAP[themeId];
@@ -401,13 +365,9 @@
             const refreshBtn = document.querySelector('#content button.fixed'); 
             const themeToggleBtn = document.getElementById('theme-toggle-btn');
             const themeOptionsContainer = document.getElementById('theme-options');
-            
-            // 1. Reset all theme classes on elements
             body.className = body.className.split(' ').filter(cls => !Object.values(THEME_MAP).some(t => t.bodyClass.includes(cls))).join(' ');
             appContainer.className = appContainer.className.split(' ').filter(cls => !cls.startsWith('shadow-') && !cls.startsWith('bg-') && !cls.startsWith('border-')).join(' ');
             header.className = header.className.split(' ').filter(cls => !cls.startsWith('bg-') && !cls.startsWith('border-') && !cls.startsWith('text-')).join(' ');
-
-            // 2. Apply dynamic background class for body
             let skyClass;
             const hour = new Date().getHours();
             if (themeId === 'default-auto') {
@@ -419,30 +379,20 @@
             } else {
                 body.classList.add(...theme.bodyClass, 'min-h-screen', 'font-sans', 'relative');
             }
-
-            // 3. Apply common classes to main UI blocks
             appContainer.classList.add('relative', 'z-20', 'max-w-3xl', 'mx-auto', 'shadow-2xl', 'min-h-screen', theme.cardClass, 'rounded-lg');
             header.classList.add('p-6', 'border-b', 'transition-colors', 'duration-500', theme.headerClass);
-
-            // 4. Update Header and Text Colors
             document.getElementById('header-title').className = `text-3xl font-extrabold ${theme.textPrimary}`;
             document.getElementById('header-subtitle').className = `text-sm mt-1 ${theme.textSecondary}`;
-
-            // 5. Update Accents (Buttons, refresh button, theme button)
             if (refreshBtn) {
                 refreshBtn.className = `font-bold py-3 px-6 rounded-full shadow-lg transition duration-300 flex items-center fixed bottom-4 right-4 md:bottom-8 md:right-8 ${theme.accentClass}`;
             }
             themeToggleBtn.className = `fixed top-4 right-4 z-50 p-3 rounded-full shadow-xl transition duration-200 ${theme.accentClass}`;
-
-            // 6. Update Effect Visibility
             const snowContainer = document.getElementById('snow-container');
             if (theme.showEffects(hour)) {
                 snowContainer.classList.remove('effect-hidden');
             } else {
                 snowContainer.classList.add('effect-hidden');
             }
-            
-            // 7. Re-render list to apply new colors to article cards
             renderArticleList();
             
             // 8. Highlight selected theme button
@@ -920,6 +870,7 @@
     </script>
 </body>
 </html>
+
 
 
 
