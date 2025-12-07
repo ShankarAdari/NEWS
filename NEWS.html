@@ -657,31 +657,21 @@
                 el.style.animationDelay = `-${Math.random() * 10}s`;
                 const initialX = Math.random() * window.innerWidth;
                 const initialY = Math.random() * window.innerHeight;
-                
-                // Store initial data for physics simulation
                 const snowflakeData = {
                     el: el,
                     x: initialX,
                     y: initialY,
-                    vx: 0, // Velocity X
-                    vy: 0, // Velocity Y (will be calculated later)
+                    vx: 0, 
+                    vy: 0, 
                     size: size
                 };
-
                 el.style.left = `${initialX}px`;
                 el.style.top = `${initialY}px`;
-                
-                // Crucial: Start the CSS animation immediately. We pause it later if interacting.
                 el.style.animationPlayState = 'running'; 
-
                 snowflakes.push(snowflakeData);
                 effectContainer.appendChild(el);
             }
         }
-
-        /**
-         * Main animation loop for interactive snow.
-         */
         function animateInteractiveSnow() {
             if (document.getElementById('snow-container').classList.contains('effect-hidden')) {
                 // Do nothing if effects are hidden
@@ -802,6 +792,7 @@
     </script>
 </body>
 </html>
+
 
 
 
